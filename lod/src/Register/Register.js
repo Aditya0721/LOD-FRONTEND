@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import axios from 'axios'
+import OtpVerificationComponent from "./OtpVerification"
 
 const Register = () => {
     
@@ -31,6 +32,9 @@ const Register = () => {
     const [validateMessage, setValidateMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
+    const [showOtp, setShowOtp] = useState(false)
+    const [otpVerified, setOtpVerified] = useState(false)
+    const [otpVerificationMessage, setOtpVerificationMessage] = useState("")
 
     useEffect(()=>{
         axios.get("http://localhost:4000/data").
@@ -94,6 +98,11 @@ const Register = () => {
         return emailValiDate+passwordValiDate+pinCodeValiDate!=""
     }
 
+    const handleOtpVerification = ()=>{
+        if(user.phoneNumber.length===10)
+        setShowOtp(true)
+    }
+    
     const handleSubmit = (e) => {
         console.log("inside handleSubmit")
         e.preventDefault()
@@ -121,8 +130,13 @@ const Register = () => {
                 </div>
                 <div className="form-group">
                     <label>PhoneNumber</label>
-                    <input type="text" name="phoneNumber" value={user.phoneNumber} onChange={(e)=>{handleChange(e)}} className="form-control" required/>
+                    <input type="text" name="phoneNumber" value={user.phoneNumber} onChange={(e)=>{handleChange(e)}} className="form-control" required disabled={otpVerified}/>
+                    <div className="form-group">
+                        <input type="button" className="form-group" style={{ background:"none", border:"none", color:"blue" }}  onClick={handleOtpVerification} value="Verify OTP"></input>
+                    </div>
+                    {(!otpVerified && showOtp) && <OtpVerificationComponent phoneNumber={user.phoneNumber} setOtpVerified={setOtpVerified} setOtpVerificationMessage={setOtpVerificationMessage} setShowOtp={setShowOtp}></OtpVerificationComponent>}
                 </div>
+                {otpVerificationMessage}
                 <div className="form-group">
                     <label>Password</label>
                     <input type='password' className="form-control" name="password" value={user.password} onChange={(e)=>{passwordValidate(e.target.value);handleChange(e)}} required/>
