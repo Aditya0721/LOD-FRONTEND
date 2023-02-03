@@ -10,16 +10,7 @@ import User from './Users/User';
 import Register from './Register/Register';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path='' element={<Layout></Layout>}>
-        {/* <Route index element={<Home></Home>}></Route> */}
-        <Route path='/home' element={<Home></Home>}></Route>
-        <Route path='/users' element={<User></User>}></Route>
-        <Route path='/register' element={<Register></Register>}></Route>
-      </Route>
-    </Routes>
-  </BrowserRouter>
+  <App></App>
 );
 
 // If you want to start measuring performance in your app, pass a function

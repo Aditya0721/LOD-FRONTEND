@@ -2,6 +2,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { useEffect, useState } from 'react'
 import app from "../config/firbaseConfig"
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import Input from "../control/input"
+import { Button } from '@mui/material';
 
 const auth = getAuth(app);
 
@@ -74,12 +76,9 @@ const OtpVerificatoin = (props)=>{
     // }
     return(
         <>
-            <div>
-                <label>Enter OTP</label>
-                <input type='text' className='form-control' onChange={(e)=>{ setOtp(e.target.value)}} value={otp}></input>
-            </div>
+            <Input label="Enter Otp" name="otp" onChange={(e)=>{ setOtp(e.target.value)}} value={otp}/>
             <div id="recaptcha-container"></div>
-            <input type="button" className='form-control' value='Check Otp' onClick={verifyCode}/>
+            <Button sx={{ml:"1rem"}} onClick={verifyCode}>Check Otp</Button> 
         </>
     )
 }
