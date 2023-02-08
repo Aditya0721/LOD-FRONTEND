@@ -1,61 +1,24 @@
-import { Grid, List, ListItemButton, ListItemText } from "@mui/material"
+import {Dialog, Box, Button, AppBar, Grid, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
+import { Container } from "@mui/system"
 import { useState } from "react"
-import { Link, Outlet} from "react-router-dom"
+import { Link, Outlet, Routes, Route} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import Home from '../Home/Home';
+import image from "../static/hp-2.jpg"
 
 const Layout = () => {
-    return(<>    
-        <Grid container spacing={2}>
-            <Grid item xs={3} style={{backgroundColor:'rgba(255,255,255,0.8)'}}>
-                <nav>
-                <ListItemButton component="a" href="#customized-list">
-                        <Link to="/home">
-                            <ListItemText
-                                sx={{ my: 0 }}
-                                primary="Home"
-                                primaryTypographyProps={{
-                                fontSize: 20,
-                                fontWeight: 'medium',
-                                letterSpacing: 0,
-                                }}
-                            />
-                        </Link>
-                    </ListItemButton>
-                    <ListItemButton component="a" href="#customized-list">
-                        <Link to="/users">
-                            <ListItemText
-                                sx={{ my: 0 }}
-                                primary="USERS"
-                                primaryTypographyProps={{
-                                fontSize: 20,
-                                fontWeight: 'medium',
-                                letterSpacing: 0,
-                                }}
-                            />
-                        </Link>
-                    </ListItemButton>
-                    <ListItemButton component="a" href="#customized-list">
-                        <Link to="/Register">
-                            <ListItemText
-                                sx={{ my: 0 }}
-                                primary="Register"
-                                primaryTypographyProps={{
-                                fontSize: 20,
-                                fontWeight: 'medium',
-                                letterSpacing: 0,
-                                }}
-                            />
-                        </Link>
-                    </ListItemButton>
-                </nav>
+    const navigate = useNavigate()
+    const pages = [["Home","/layout/home"], ["Users","/users"], ["SignUp","/layout/register"], ["LogIn", "/layout/login"]]
+    return(<>
+            <Grid item xs={12} container border={0} sx={{height: "50%", backgroundImage:`url(${image})`, justifyContent:'center', alignItems:'center'}}>
+                    <Typography  variant="h1" color='Background'>LOD</Typography> 
             </Grid>
-            <Grid item xs={9}
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            sx={{bgcolor:'darkgrey'}}>
-                <Outlet></Outlet>
+            <Grid item xs={12} border={2} container sx={{ height: "50%", display:"flex", justifyContent:"center", alignContent:"baseLine"}}>
+                <Routes>
+                    <Route index element={<Home></Home>}></Route>
+                    <Route path='/home' element={<Home></Home>}></Route>
+                </Routes>
             </Grid>
-        </Grid>
     </>)
    
 }

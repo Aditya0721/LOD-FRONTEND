@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import app from "../config/firbaseConfig"
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import Input from "../control/input"
-import { Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
+
 
 const auth = getAuth(app);
-
 const OtpVerificatoin = (props)=>{
 
     const [otp, setOtp] = useState("")
@@ -45,7 +45,7 @@ const OtpVerificatoin = (props)=>{
             // Error; SMS not sent
             // ...
             console.log(error)
-            props.setShowOtp(false)
+            props.setShowOtpComponent(false)
             props.setOtpVerificationMessage("number is not correct")
             });
     }
@@ -76,9 +76,9 @@ const OtpVerificatoin = (props)=>{
     // }
     return(
         <>
-            <Input label="Enter Otp" name="otp" onChange={(e)=>{ setOtp(e.target.value)}} value={otp}/>
+            <TextField label="OTP" name="otp" value={otp} onChange={(e)=>{setOtp(e.target.value)}} size="small" sx={{m:1}}></TextField>
             <div id="recaptcha-container"></div>
-            <Button sx={{ml:"1rem"}} onClick={verifyCode}>Check Otp</Button> 
+            <Button variant='contained' color="success" sx={{ml:"1rem"}} onClick={verifyCode}>Check Otp</Button> 
         </>
     )
 }

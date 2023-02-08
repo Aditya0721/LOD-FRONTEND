@@ -4,8 +4,10 @@ import axios from 'axios'
 import OtpVerificationComponent from "./OtpVerification"
 import { useNavigate } from "react-router-dom"
 import FormControl from '@mui/material/FormControl';
-import { Button, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material"
+import { Button, Grid, InputLabel, MenuItem, Select, TextField, Stack, Typography, Paper} from "@mui/material"
 import Input from "../control/input"
+import paperStyle from "../config/style"
+import { width } from "@mui/system"
 
 
 const Register = () => {
@@ -33,11 +35,11 @@ const Register = () => {
     const [localities, setLocalities] = useState([])
     const [emailValiDate, setEmailValidate] = useState("")
     const [passwordValiDate, setPasswordValidate] = useState("")
-    const [pinCodeValiDate, setPinCodeValidate] = useState("")
+    const [pinCodeValiDate, setPinCodeValidate] = useState("dont show")
     const [validateMessage, setValidateMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
-    const [showOtp, setShowOtp] = useState(false)
+    const [showOtpComponent, setShowOtpComponent] = useState(false)
     const [otpVerified, setOtpVerified] = useState(false)
     const [otpVerificationMessage, setOtpVerificationMessage] = useState("")
 
@@ -105,9 +107,28 @@ const Register = () => {
         return emailValiDate+passwordValiDate+pinCodeValiDate!=""
     }
 
-    const handleOtpVerification = ()=>{
-        if(user.phoneNumber.length===10)
-        setShowOtp(true)
+    const checkUserExists = async()=>{
+        let flag = false
+        await axios.get("http://localhost:8081/lod/user/"+user.phoneNumber).
+                    then((res)=>{flag = true}).
+                    catch((err)=>{flag = false})
+        return flag
+    }
+
+    const handleOtpVerification = async()=>{
+        if(user.phoneNumber.length===0){
+            setOtpVerificationMessage("please enter your number")
+        }
+        else if(user.phoneNumber.length!=10){
+            setOtpVerificationMessage("please enter 10 digit phone number")
+        }
+        else if(await checkUserExists()){
+            setOtpVerificationMessage("number already registerred")
+        }
+        else{
+            setOtpVerificationMessage("")
+            setShowOtpComponent(true)
+        }
     }
     
     const handleSubmit = async(e) => {
@@ -129,29 +150,105 @@ const Register = () => {
 
     return (
         <>
+        <form onSubmit={handleSubmit}>
+            <Stack direction='column'>
+            <Typography variant="h4" sx={{fontFamily: 'monospace',
+                    fontWeight: 700,
+                    color: 'green',
+                    justifyContent:"center", alignItems:"center", mt:"2"}}>Register</Typography>
+                <Paper elevation={2}>
+                    <Stack border={0} direction='row'>
+                        <Input label="FirstName" name="firstName" value={user.firstName} onChange={(event)=>{handleChange(event)}} required/>
+                        <Input label="LastName" name="lastName" value={user.lastName} onChange={(event)=>{handleChange(event)}} required/>
+                    </Stack>
+                </Paper>
+                
+                <Paper elevation={2} sx={paperStyle}>
+                    <Stack direction='column'>
+                        <Stack border={0} direction='row'>
+                            <Input label="PhoneNumber" name="phoneNumber" value={user.phoneNumber} onChange={(event)=>{handleChange(event)}} disabled={showOtpComponent} required/>
+                            <Button sx={{}} variant="text" onClick={handleOtpVerification}>Verify OTP</Button>
+                        </Stack>
+                    <Typography variant='inherit' ml={2} sx={{color:'red'}}>{otpVerificationMessage}</Typography>
+                    </Stack>
+                </Paper>
+                
+                {(!otpVerified && showOtpComponent) &&<Paper elevation={2} sx={paperStyle}>
+                    <Stack direction='row'>
+                        <OtpVerificationComponent phoneNumber={user.phoneNumber} setOtpVerified={setOtpVerified} setOtpVerificationMessage={setOtpVerificationMessage} setShowOtpComponent={setShowOtpComponent}></OtpVerificationComponent>
+                        <Button onClick={()=>{setShowOtpComponent(false)}}>Change Number</Button>
+                    </Stack>
+                </Paper>}
+
+                <Paper sx={paperStyle}>
+                    <Stack direction='row'>
+                        <Input label="EmailId" name="email" value={user.email} onChange={(event)=>{emailValidate(event.target.value);handleChange(event)}}
+                        error={emailValiDate!==""} helperText={emailValiDate!==""? 'wrong email id format':""}/>
+                        <Input placeHolder="Password" label="Password" name="password" value={user.password} onChange={(event)=>{passwordValidate(event.target.value);handleChange(event)}}  type='password' 
+                        error={passwordValiDate!==""} helperText={passwordValiDate!==""? 'password should be greater than 8 characters':""}/>
+                    </Stack>
+                </Paper>
+
+                <Paper sx={paperStyle}>
+                    <Input type="text" label="PinCode" name="pinCode" value={address.pinCode} onChange={handlePincodeChange} error={pinCodeValiDate!==""}
+                        helperText={pinCodeValiDate!==""?"PinCode is Not Valid":""} required/>
+                    
+                        {pinCodeValiDate==="" && (<>
+                                <Input label="State" type="text" value={address.state} disabled/>
+                                <Input label="District" type="text" value={address.district} disabled/>
+                                <Input label="City" type="text" value={address.city} disabled/>
+                                <Stack direction='column'>
+                                    <InputLabel id='register-select-label'>Locality</InputLabel>
+                                    <Select
+                                        labelId='register-select-label'
+                                        label='Locality'
+                                        id="register-select"
+                                        value = {address.locality}
+                                        onChange={(event)=>{setAddress({...address,["locality"]:event.target.value})}}
+                                        disabled={address.pinCode==="" || pinCodeValiDate!==""}
+                                    >
+                                        {localities.map((locality, index)=>{
+                                            return <MenuItem key={index} value={locality.officeName}>{locality.officeName}</MenuItem>
+                                        })}
+                                    </Select>
+                                    <Input type="text"label="LandMark" name="landMark" value={address.landMark} onChange={handleChangeAddress} required/>
+                                </Stack></>)}
+                            
+                </Paper>
+                <Paper style={{...paperStyle, justifyContent:'center'}}>
+                    <Button type="submit" sx={{backgroundColor:"lightGreen", width:"50%", alignContent:"center"}}><Typography variant="button" >Register</Typography></Button>
+                </Paper>
+                <Paper>
+                    <Typography color='red'>{errorMessage}</Typography>
+                    <Typography variant="inherit" color='red'>{successMessage}</Typography>
+                </Paper>
+            </Stack>
+        </form>
+        
+        {/* <Grid item container border={1} sx={{alignContent:"center"}}>
            <form onSubmit={handleSubmit}>
-            <Grid container>
-                <Grid item xs={9}>
+            <Grid item xs={5} container sx={{ml:"2rem", backgroundColor:"rgb(255,255,255,0.8)"}}>
+                <Grid item xs={12}>
                     <Input label="FirstName" name="firstName" value={user.firstName} onChange={(event)=>{handleChange(event)}} required/>
                     <Input label="LastName" name="lastName" value={user.lastName} onChange={(event)=>{handleChange(event)}} required/>
                 </Grid>
                 <Grid container>
-                    <Grid item xs={9}>
+                    <Grid item xs={12}>
                         <Input label="PhoneNumber" name="phoneNumber" value={user.phoneNumber} onChange={(event)=>{handleChange(event)}} disabled={otpVerified} required/>
                         <Button sx={{mt:"2rem"}} variant="text" onClick={handleOtpVerification}>Verify OTP</Button>
                     </Grid>
-                    <Grid item xs={9}>
-                        {(!otpVerified && showOtp) && <OtpVerificationComponent phoneNumber={user.phoneNumber} setOtpVerified={setOtpVerified} setOtpVerificationMessage={setOtpVerificationMessage} setShowOtp={setShowOtp}></OtpVerificationComponent>}
+                    <Grid item xs={12}>
+                        {(!otpVerified && showOtpComponent) && <OtpVerificationComponent phoneNumber={user.phoneNumber} setOtpVerified={setOtpVerified} setOtpVerificationMessage={setOtpVerificationMessage} setShowOtpComponent={setShowOtpComponent}></OtpVerificationComponent>}
                         {otpVerificationMessage}
                     </Grid>
                 </Grid>
-                <Grid item xs={9}>
+                <Grid item xs={12}>
                     <Input label="EmailId" name="email" value={user.email} onChange={(event)=>{emailValidate(event.target.value);handleChange(event)}}
                     error={emailValiDate!==""} helperText={emailValiDate!==""? 'wrong email id format':""}/>
                     <Input placeHolder="Password" label="Password" name="password" value={user.password} onChange={(event)=>{passwordValidate(event.target.value);handleChange(event)}}  type='password' 
                     error={passwordValiDate!==""} helperText={passwordValiDate!==""? 'password should be greater than 8 characters':""}/>
                 </Grid>
-                <Grid item xs={9}>
+                <Grid item xs={12}>
                     <Input type="text" label="PinCode" name="pinCode" value={address.pinCode} onChange={handlePincodeChange} required/>
                     {pinCodeValiDate==="" && (
                         <Grid>
@@ -173,11 +270,11 @@ const Register = () => {
                             <Input type="text"label="LandMark" name="landMark" value={address.landMark} onChange={handleChangeAddress} required/>
                         </Grid>)}
                 </Grid>
-                <Grid item xs={9} sx= {{ml: "1rem"}}>
+                <Grid item xs={12} sx= {{ml: "1rem"}}>
                     <Button variant="contained" type="submit" disabled={validate()}>Register</Button>
                 </Grid>
                 
-            </Grid> 
+            </Grid>  */}
                 
                 
                 {/* <div className="form-group">
@@ -194,7 +291,7 @@ const Register = () => {
                     <div className="form-group">
                         <Input type="button" className="form-group" style={{ background:"none", border:"none", color:"blue" }}  onClick={handleOtpVerification} value="Verify OTP"></Input>
                     </div>
-                    {(!otpVerified && showOtp) && <OtpVerificationComponent phoneNumber={user.phoneNumber} setOtpVerified={setOtpVerified} setOtpVerificationMessage={setOtpVerificationMessage} setShowOtp={setShowOtp}></OtpVerificationComponent>}
+                    {(!otpVerified && showOtpComponent) && <OtpVerificationComponent phoneNumber={user.phoneNumber} setOtpVerified={setOtpVerified} setOtpVerificationMessage={setOtpVerificationMessage} setShowOtpComponent={setShowOtpComponent}></OtpVerificationComponent>}
                 </div>
                 {otpVerificationMessage}
                 <div className="form-group">
@@ -240,11 +337,12 @@ const Register = () => {
                 </div>
                 <Input type="submit" value="Register" className="btn btn-primary" disabled={validate()}/> */}
                 {/* {emailValiDate} */}
-                {passwordValiDate}
+                {/* {passwordValiDate}
                 {pinCodeValiDate}
                 {errorMessage}
                 {successMessage}
                 </form>
+                </Grid> */}
         </>
     )
 }
