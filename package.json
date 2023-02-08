@@ -1,0 +1,21 @@
+{
+    "name": "LOD",
+    "private": true,
+    "workspaces":[
+        "lod/*"
+    ],
+    "author": {
+        "name": "The LOD Team",
+        "email": "hi@codelit.dev"
+    },
+    "repository": {
+        "type": "git",
+        "url":""
+    },
+    "license": "MIT",
+    "scripts": {
+        "frontend:start":"cd LOD-FrontEnd && npm start",
+        "backend:start": "cd LOD-BackEnd && npm start",
+        "start":"npm-run-all --parallel backend:start frontend:start"
+    }
+}
