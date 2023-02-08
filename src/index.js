@@ -1,0 +1,25 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import Home from './Home/Home';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Layout from './Layout/Layout';
+import User from './Users/User';
+import Register from './Register/Register';
+import { Provider } from 'react-redux';
+import store from './store';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+console.log("hi")
+root.render(
+  <Provider store={store}>
+      <App></App>
+  </Provider>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
