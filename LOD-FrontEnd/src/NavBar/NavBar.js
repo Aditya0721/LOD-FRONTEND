@@ -10,17 +10,29 @@ import CustomDialog from "../control/Dialog"
 import image from "../static/hp-2.jpg"
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../store/authSlice";
+import { useState} from "react";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = ()=>{
-    const pages = [["Users","/users"], ["SignUp","/register"], ["LogIn", "/login"]]
+    const pages = [["Users","/users"]]
+    const [open, setOpen] = useState(false)
+    const [showPopUp, setShowPopUp] = useState("")
     const isLoggedIn = useSelector(state=>state.auth.isLoggedIn)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const handleClose = ()=>{
+        setOpen(false)
+    }
 
     const logOut = ()=>{
+        setOpen(false)
         dispatch(authActions.logOut())
         dispatch(authActions.setUser({}))
+        navigate("/layout/home")
     }
     return(
+        <>
             <AppBar position="static">
                         <Container maxWidth="xl">
                             <Toolbar>
@@ -48,16 +60,16 @@ const NavBar = ()=>{
                                     >
                                         USERS
                                     </Button></Link>
-                                    {!isLoggedIn && <Link to='/register'><Button
-                                        sx={{ my: 2, color: 'white', display: 'block' }}
+                                    {!isLoggedIn && <Button
+                                        sx={{ my: 2, color: 'white', display: 'block' }} onClick={()=>{setShowPopUp("Register");setOpen(true)}}
                                     >
-                                        Rgister
-                                    </Button></Link>}
-                                    {!isLoggedIn && <Link to='/login'><Button
-                                        sx={{ my: 2, color: 'white', display: 'block' }}
+                                        Register
+                                    </Button>}
+                                    {!isLoggedIn &&<Button
+                                        sx={{ my: 2, color: 'white', display: 'block' }} onClick={()=>{setShowPopUp("Login");setOpen(true)}}
                                     >
                                         LogIn
-                                    </Button></Link>}
+                                    </Button>}
                                 </Box>
                                 {isLoggedIn && 
                                 <>
@@ -76,6 +88,11 @@ const NavBar = ()=>{
                             </Toolbar>
                         </Container>    
                     </AppBar>
+                    {showPopUp=="Login"?
+                        <CustomDialog open={open && !isLoggedIn} handleClose={handleClose}><LogIn></LogIn></CustomDialog>:
+                        <CustomDialog open={open} handleClose={handleClose}><Register></Register></CustomDialog>
+                        }
+                    </>
             )
 }
 

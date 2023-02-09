@@ -25,6 +25,7 @@ const LogIn = (props)=>{
 
     const [emailId, setEmailId] = useState("")
     const [password, setPassword] = useState("")
+    const[emailVerificationMsg, setEmailVerificationMsg] = useState("")
     
     const [open, setOpen] = useState(true)
     
@@ -34,6 +35,7 @@ const LogIn = (props)=>{
     useEffect(()=>{
         if(otpVerified){
             console.log("userLoggedIn")
+            setOtpVerificationMessage("Logged In")
             dispatch(authActions.logIn())
             navigate('/profile')
         }
@@ -61,7 +63,7 @@ const LogIn = (props)=>{
 
     const checkUserExists = async()=>{
         let flag = false
-        await axios.get("http://localhost:8081/lod/user/"+phoneNumber).
+        await axios.post("http://localhost:8081/lod/user/login/?phoneNumber="+phoneNumber).
                     then((res)=>{flag = true; dispatch(authActions.setUser(res.data))}).
                     catch((err)=>{flag = false})
         return flag
@@ -81,7 +83,13 @@ const LogIn = (props)=>{
             setShowOtpComponent(true)
         }
     }
-
+    const handleLogIn = async()=>{
+        await axios.post("http://localhost:8081/lod/user/login/?email="+emailId,{
+            email:emailId,
+            password:password
+        }).then((res)=>{setEmailVerificationMsg("");dispatch(authActions.setUser(res.data)); dispatch(authActions.logIn())}).
+        catch((err)=>{console.log(err.response.data); setEmailVerificationMsg(err.response.data)})
+    }
     return(<>
             <Box border={0} sx={{
                 display: 'flex',
@@ -99,30 +107,32 @@ const LogIn = (props)=>{
             }}>
                     <Typography variant="h3" m={1} sx={{fontFamily: 'monospace',
                     fontWeight: 700,
-                    color: 'green',
+                    color: 'lightblue',
                     alignContent:"center"}}>LogIn</Typography>
-                    <ToggleButtonGroup color='success'
-                                value={alignment}
-                                exclusive
-                                onChange={handleToogleChange}
-                                aria-label="Platform"
-                                sx={{
-                                    justifyContent:"center",
-                                    alignItems:"center",
-                                    width:"100%"
-                                }}>
-                            <ToggleButton value="phoneNumber">Otp Verification</ToggleButton>
-                            <ToggleButton value="email">Email Verification</ToggleButton>
-                    </ToggleButtonGroup>
-                    <Stack direction="column" m={2} width='80%' border={0}>
+                     <Paper elevation={1} sx={{...paperStyle, width:'100%'}}>
+                        <ToggleButtonGroup color='primary'
+                                    value={alignment}
+                                    exclusive
+                                    onChange={handleToogleChange}
+                                    aria-label="Platform"
+                                    sx={{
+                                        justifyContent:"center",
+                                        alignItems:"center",
+                                        width:"100%"
+                                    }}>
+                                <ToggleButton value="phoneNumber">Otp Verification</ToggleButton>
+                                <ToggleButton value="email">Email Verification</ToggleButton>
+                        </ToggleButtonGroup>
+                     </Paper>
+                    <Stack direction="column" m={2} width='100%' border={0} >
                     {alignment=="phoneNumber"?
-                        <Paper elevation={1} sx={{...paperStyle, width:'100%'}}>
+                        <Paper elevation={1} sx={{...paperStyle, width:'100%', backgroundColor:'lightBlue'}}>
                             <Stack direction="column" display="flex" justifyContent="center" alignContent="center" sx={{width:"80%"}}>
                                 {/* <Typography variant='button'  alignContent="center" sx={typographyStyle} m={1}>LogIn with your PhoneNumber</Typography> */}
                                 {(!showOtpComponent) && <>
-                                <TextField label="PhoneNumber" name="phoneNumber" value={phoneNumber} onChange={(e)=>{setPhoneNumber(e.target.value)}} size="small" sx={{m:1}} required></TextField>
+                                <TextField variant="standard" autoFocus label="PhoneNumber" name="phoneNumber" value={phoneNumber} onChange={(e)=>{setPhoneNumber(e.target.value)}} size="small" sx={{m:1}} required></TextField>
                                 {/* <MuiPhoneNumber value={phoneNumber} label="PhoneNumber" defaultCountry={'in'} name="phoneNumber" onChange={(value)=>{setPhoneNumber(value)}} sx={{m:1}} required></MuiPhoneNumber> */}
-                                <Button sx={{backgroundColor:'lightGreen'}} onClick={()=>{handleOtpOnClick()}}><Typography variant="button">Send OTP</Typography></Button></>}
+                                <Button sx={{backgroundColor:'royalblue'}} onClick={()=>{handleOtpOnClick()}}><Typography variant="button" color='white'>Send OTP</Typography></Button></>}
                                 {(showOtpComponent) &&<>
                                     <OtpVerificationComponent phoneNumber={phoneNumber} setOtpVerified={setOtpVerified} setOtpVerificationMessage={setOtpVerificationMessage} setShowOtpComponent={setShowOtpComponent}></OtpVerificationComponent>
                                     <Button onClick={()=>{setShowOtpComponent(false)}}>Change Number</Button>
@@ -131,11 +141,13 @@ const LogIn = (props)=>{
                             </Stack>
                         </Paper>:
                         // <Divider>OR</Divider>
-                        <Paper elevation={1} sx={{...paperStyle, width:'100%'}}>
+                        <Paper elevation={1} sx={{...paperStyle, width:'100%', backgroundColor:'lightBlue'}}> 
                             <Stack direction="column" display="flex" justifyContent="center" alignContent="center" sx={{width:"80%"}}>
                             {/* <Typography variant='button'  alignContent="center" sx={typographyStyle} m={1}>LogIn with your Email</Typography> */}
-                                <TextField label="Email" name="phoneNumber" value={emailId} onChange={(e)=>{setEmailId(e.target.value)}} size="small" sx={{m:1}}></TextField>
+                                <TextField autoFocus label="Email" name="phoneNumber" value={emailId} onChange={(e)=>{setEmailId(e.target.value)}} size="small" sx={{m:1}}></TextField>
                                 <TextField type="password" label="Password" name="password" value={password} onChange={(e)=>{setPassword(e.target.value)}} size="small" sx={{m:1}}></TextField>
+                                 <Button sx={{backgroundColor:'royalblue'}} onClick={handleLogIn}><Typography variant="button" color='white'>LogIn</Typography></Button>
+                                {emailVerificationMsg}
                             </Stack>
                         </Paper>}
                     </Stack>

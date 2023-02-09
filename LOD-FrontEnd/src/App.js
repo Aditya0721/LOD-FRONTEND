@@ -27,8 +27,6 @@ function App() {
               <Route path="/" element={<Layout></Layout>}></Route>
               <Route path="/layout/*" element={<Layout />} />
               {/* <Route to="/users" element={<User></User>}></Route> */}
-              <Route path='/register' element={<CustomDialog><Register></Register></CustomDialog>}></Route>
-              <Route path='/login' element={<CustomDialog><LogIn></LogIn></CustomDialog>}></Route>
               <Route path='/users' element={<User></User>}></Route>
               <Route path='/profile' element={<ProtectedComponent><Profile></Profile></ProtectedComponent>}></Route>
             </Routes>

@@ -7,7 +7,6 @@ import FormControl from '@mui/material/FormControl';
 import { Button, Grid, InputLabel, MenuItem, Select, TextField, Stack, Typography, Paper} from "@mui/material"
 import Input from "../control/input"
 import paperStyle from "../config/style"
-import { width } from "@mui/system"
 
 
 const Register = () => {
@@ -59,6 +58,11 @@ const Register = () => {
         setUser({...user, ["address"]:address})
     },[address])
 
+    useEffect(()=>{
+        if(otpVerified){
+            setOtpVerificationMessage("Number Registerred")
+        }
+    }, [otpVerified])
     const emailValidate = (email)=>{
         if(!email.match(/^([a-z0-9]+)@([a-z]{3,9})\.([a-z]{2,3})$/)){
             setEmailValidate("email is not in a correct format")
@@ -156,14 +160,14 @@ const Register = () => {
                     fontWeight: 700,
                     color: 'green',
                     justifyContent:"center", alignItems:"center", mt:"2"}}>Register</Typography>
-                <Paper elevation={2}>
+                <Paper elevation={1}>
                     <Stack border={0} direction='row'>
-                        <Input label="FirstName" name="firstName" value={user.firstName} onChange={(event)=>{handleChange(event)}} required/>
+                        <Input autoFocus label="FirstName" name="firstName" value={user.firstName} onChange={(event)=>{handleChange(event)}} required/>
                         <Input label="LastName" name="lastName" value={user.lastName} onChange={(event)=>{handleChange(event)}} required/>
                     </Stack>
                 </Paper>
                 
-                <Paper elevation={2} sx={paperStyle}>
+                <Paper elevation={1} sx={paperStyle}>
                     <Stack direction='column'>
                         <Stack border={0} direction='row'>
                             <Input label="PhoneNumber" name="phoneNumber" value={user.phoneNumber} onChange={(event)=>{handleChange(event)}} disabled={showOtpComponent} required/>
