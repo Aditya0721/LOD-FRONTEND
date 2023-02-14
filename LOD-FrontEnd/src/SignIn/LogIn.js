@@ -7,11 +7,11 @@ import { useNavigate } from "react-router"
 import axios from "axios"
 import { useDispatch } from 'react-redux';
 import { authActions } from '../store/authSlice';
+import { dialogActions } from "../store/logInRegisterDialogSlice"
 
 const LogIn = (props)=>{
 
     const dispatch = useDispatch()
-    
 
     const [phoneNumberVerification, setPhoneNumberVerification] = useState(false)
     const [emailVerification, setEmailVerification] = useState(false)
@@ -27,10 +27,9 @@ const LogIn = (props)=>{
     const [password, setPassword] = useState("")
     const[emailVerificationMsg, setEmailVerificationMsg] = useState("")
     
-    const [open, setOpen] = useState(true)
-    
     const [alignment, setAlignment] = useState("phoneNumber")
 
+    const navigate = useNavigate()
 
     useEffect(()=>{
         if(otpVerified){
@@ -43,12 +42,6 @@ const LogIn = (props)=>{
     const handleToogleChange = (event) => {
         setAlignment(event.target.value);
       };
-    const navigate = useNavigate()
-
-    const handleClose = ()=>{
-        setOpen(false)
-        navigate(-1)
-    }
 
     const paperStyle = {display: 'flex',
                         flexWrap: 'wrap',
@@ -87,7 +80,7 @@ const LogIn = (props)=>{
         await axios.post("http://localhost:8081/lod/user/login/?email="+emailId,{
             email:emailId,
             password:password
-        }).then((res)=>{setEmailVerificationMsg("");dispatch(authActions.setUser(res.data)); dispatch(authActions.logIn())}).
+        }).then((res)=>{setEmailVerificationMsg("");dispatch(authActions.setUser(res.data)); dispatch(authActions.logIn()); dispatch(dialogActions.close())}).
         catch((err)=>{console.log(err.response.data); setEmailVerificationMsg(err.response.data)})
     }
     return(<>

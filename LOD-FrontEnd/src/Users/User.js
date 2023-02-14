@@ -1,4 +1,7 @@
+import { Avatar, Card, CardContent, CardHeader, CardMedia, Typography } from "@mui/material"
+import { Box, Stack } from "@mui/system"
 import useFetch from "../customHooks/useFetch"
+import testImg from "../static/test_image-1.png"
 
 const User = ()=>{
 
@@ -15,7 +18,7 @@ const User = ()=>{
 
     return (
         <>  
-            
+{/*             
             <table>
                 <thead>
                     <tr>
@@ -41,7 +44,34 @@ const User = ()=>{
                 </tbody>
                
             </table>
-            <button onClick={testSetUserList}>Remove Last Element</button>
+            <button onClick={testSetUserList}>Remove Last Element</button> */}
+            <Box sx={{width:'50%',display:'flex', justifyContent:"start", alignItems:'base'}}>
+                <Stack direction='column' width="100%" spacing={3}>
+                    {userList.map((user, index)=>{
+                        return(<Card key={index} sx={{maxWidth:'345',alignContent:'baseline'}}>
+                            <CardMedia
+                                component="img"
+                                height="140"
+                                image={testImg}
+                                alt="No Image"
+                                sx={{ padding: "1em 1em 0 1em", objectFit: "contain" }}
+                                >
+                            </CardMedia>
+                            <CardHeader 
+                                avatar={<Avatar sx={{ backgroundColor: 'orange' }}>{user.firstName[0].toUpperCase()}</Avatar>}
+                                title={(user.firstName+" "+user.lastName).toUpperCase()}
+                                subheader={user.role}
+                            />
+                            <CardContent>
+                                <Typography variant='h6' fontFamily='sans-serif'>{user.phoneNumber}</Typography>
+                                <Typography variant='h6'>{user.email}</Typography>
+                                <Typography variant='h6'>{user.address.state}</Typography>
+                                <Typography variant='h6'>{user.address.city}</Typography>
+                            </CardContent>
+                        </Card>)
+                    })}
+                </Stack>    
+            </Box>
         </>
     )
 }

@@ -11,6 +11,8 @@ import NavBar from './NavBar/NavBar';
 import CustomDialog from './control/Dialog';
 import Profile from './Profile/Profile';
 import ProtectedComponent from './ProtectedComponent/ProtectedComponent';
+import OnlyAdmin from './ProtectedComponent/OnlyAdmin';
+import ShowShops from './shops/ShowShops';
 
 function App() {
   return(
@@ -22,12 +24,13 @@ function App() {
           <Grid item xs={12}>
               <NavBar></NavBar>
           </Grid>
-          <Grid item container xs={12} border={1} height='100%' justifyContent='center' alignItems='center'>
+          <Grid item container xs={12} border={1} height='100%' display='flex' justifyContent="center">
             <Routes>
-              <Route path="/" element={<Layout></Layout>}></Route>
+              <Route path="/*" element={<Layout></Layout>}></Route>
               <Route path="/layout/*" element={<Layout />} />
               {/* <Route to="/users" element={<User></User>}></Route> */}
-              <Route path='/users' element={<User></User>}></Route>
+              <Route path="/shops" element={<ShowShops></ShowShops>}></Route>
+              <Route path='/users' element={<OnlyAdmin><User></User></OnlyAdmin>}></Route>
               <Route path='/profile' element={<ProtectedComponent><Profile></Profile></ProtectedComponent>}></Route>
             </Routes>
           </Grid>

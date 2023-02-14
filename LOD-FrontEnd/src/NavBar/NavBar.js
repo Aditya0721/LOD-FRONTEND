@@ -12,21 +12,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../store/authSlice";
 import { useState} from "react";
 import { useNavigate } from "react-router-dom";
+import { dialogActions } from "../store/logInRegisterDialogSlice";
 
 const NavBar = ()=>{
     const pages = [["Users","/users"]]
-    const [open, setOpen] = useState(false)
-    const [showPopUp, setShowPopUp] = useState("")
+    const view = useSelector(state=>state.dialog.view)
     const isLoggedIn = useSelector(state=>state.auth.isLoggedIn)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-
-    const handleClose = ()=>{
-        setOpen(false)
-    }
+    const user = useSelector(state=>state.auth.user)
 
     const logOut = ()=>{
-        setOpen(false)
+        dispatch(dialogActions.close())
         dispatch(authActions.logOut())
         dispatch(authActions.setUser({}))
         navigate("/layout/home")
@@ -55,18 +52,23 @@ const NavBar = ()=>{
                                 </Button>
                             </Link>
                                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                                    <Link to='/users'><Button
+                                    {(isLoggedIn && user.role=="ADMIN") && <Link to='/users'><Button
                                         sx={{ my: 2, color: 'white', display: 'block' }}
                                     >
                                         USERS
-                                    </Button></Link>
+                                    </Button></Link>}
+                                    <Link to="/shops">
+                                        <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+                                                SHOPS
+                                        </Button>
+                                    </Link>
                                     {!isLoggedIn && <Button
-                                        sx={{ my: 2, color: 'white', display: 'block' }} onClick={()=>{setShowPopUp("Register");setOpen(true)}}
+                                        sx={{ my: 2, color: 'white', display: 'block' }} onClick={()=>{dispatch(dialogActions.registerView()); dispatch(dialogActions.open())}}
                                     >
                                         Register
                                     </Button>}
                                     {!isLoggedIn &&<Button
-                                        sx={{ my: 2, color: 'white', display: 'block' }} onClick={()=>{setShowPopUp("Login");setOpen(true)}}
+                                        sx={{ my: 2, color: 'white', display: 'block' }} onClick={()=>{dispatch(dialogActions.logInView()); dispatch(dialogActions.open())}}
                                     >
                                         LogIn
                                     </Button>}
@@ -88,9 +90,9 @@ const NavBar = ()=>{
                             </Toolbar>
                         </Container>    
                     </AppBar>
-                    {showPopUp=="Login"?
-                        <CustomDialog open={open && !isLoggedIn} handleClose={handleClose}><LogIn></LogIn></CustomDialog>:
-                        <CustomDialog open={open} handleClose={handleClose}><Register></Register></CustomDialog>
+                    {view=="Login"&&
+                        <CustomDialog><LogIn></LogIn></CustomDialog>}
+                    {view=="Register"&&<CustomDialog><Register></Register></CustomDialog>
                         }
                     </>
             )

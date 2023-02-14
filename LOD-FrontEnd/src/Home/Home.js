@@ -1,9 +1,10 @@
 import { Typography } from "@mui/material"
+import ShowShops from "../shops/ShowShops"
 
 const Home = () => {
     return(
         <>
-            <Typography  variant="h1" color='Background'>LOD</Typography>
+            LOD
         </>
     )
 }

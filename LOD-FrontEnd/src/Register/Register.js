@@ -4,13 +4,18 @@ import axios from 'axios'
 import OtpVerificationComponent from "./OtpVerification"
 import { useNavigate } from "react-router-dom"
 import FormControl from '@mui/material/FormControl';
-import { Button, Grid, InputLabel, MenuItem, Select, TextField, Stack, Typography, Paper} from "@mui/material"
+import { Button, Grid, InputLabel, MenuItem, Select, TextField, Stack, Typography, Paper, FormControlLabel, Radio, RadioGroup, FormLabel, ToggleButtonGroup, ToggleButton} from "@mui/material"
 import Input from "../control/input"
 import paperStyle from "../config/style"
+import { set } from "mongoose"
+import { useDispatch } from "react-redux"
+import { shopRequestsActions } from "../store/shopRequestSlice"
 
 
 const Register = () => {
     
+    const dispatch = useDispatch()
+
     const [address, setAddress] = useState({
         "city":"",
         "state":"",
@@ -26,8 +31,18 @@ const Register = () => {
         "password":"",
         "phoneNumber":"",
         "address":address, 
-        "cardDetails":[{"cardId":1, "cardNumber": 12324}, {"cardId":3, "cardNumber": 12324}]
+        "cardDetails":[{"cardId":1, "cardNumber": 12324}, {"cardId":3, "cardNumber": 12324}],
+        "role":"CUSTOMER"
     })
+
+    const [shop, setShop] = useState({
+        "userId":"",
+        "shopName":"",
+        "address":address,
+        "phoneNumber":""
+    })
+
+    const [alignment, setAlignment] = useState("CUSTOMER")
 
     const [pinCodeData, setPinCodeData] = useState([])
     const [pinCodes, setPinCodes] = useState([])
@@ -41,6 +56,7 @@ const Register = () => {
     const [showOtpComponent, setShowOtpComponent] = useState(false)
     const [otpVerified, setOtpVerified] = useState(false)
     const [otpVerificationMessage, setOtpVerificationMessage] = useState("")
+    const [isSubmitDisabled, setIsSubmitDisabled] = useState(false)
 
     const navigate = useNavigate()
 
@@ -56,6 +72,9 @@ const Register = () => {
     useEffect(()=>{
         console.log(address)
         setUser({...user, ["address"]:address})
+        if(user.role==="SHOP KEEPER"){
+            setShop({...shop, ["address"]:address})
+        }
     },[address])
 
     useEffect(()=>{
@@ -63,6 +82,7 @@ const Register = () => {
             setOtpVerificationMessage("Number Registerred")
         }
     }, [otpVerified])
+    
     const emailValidate = (email)=>{
         if(!email.match(/^([a-z0-9]+)@([a-z]{3,9})\.([a-z]{2,3})$/)){
             setEmailValidate("email is not in a correct format")
@@ -81,6 +101,10 @@ const Register = () => {
         }
     }
 
+    const handleToogleChange = (e)=>{
+        setAlignment(e.target.value)
+        setUser({...user, ["role"]:e.target.value})
+    }
     const handleChangeAddress = (e) =>{
         //console.log(e.target)
         setAddress({...address, [e.target.name]:e.target.value})
@@ -107,6 +131,10 @@ const Register = () => {
         setUser({...user, [e.target.name]:e.target.value})
     }
 
+    const handleShopOnChange = (e)=>{
+        setShop({...shop, [e.target.name]:e.target.value})
+    }
+    
     const validate = ()=>{
         return emailValiDate+passwordValiDate+pinCodeValiDate!=""
     }
@@ -139,11 +167,20 @@ const Register = () => {
         console.log("inside handleSubmit")
         e.preventDefault()
         console.log(user)
+        console.log(shop)
 
         if(otpVerified){
-            await axios.post("http://localhost:8081/lod/user/signup", user)
-            .then((res)=>{console.log(res.data);setSuccessMessage(res.data.status);setErrorMessage("")})
-            .catch((err)=>{console.log(err); setErrorMessage(err.request.response); setSuccessMessage("")})
+            if(user.role==="CUSTOMER"){
+                await axios.post("http://localhost:8081/lod/user/signup", user)
+                .then((res)=>{console.log(res.data);setSuccessMessage(res.data.status);setErrorMessage("")})
+                .catch((err)=>{console.log(err); setErrorMessage(err.request.response); setSuccessMessage("")})
+            }
+            else{
+                await axios.post("http://localhost:8081/lod/user/signup", user)
+                .then((res)=>{console.log(res.data);setSuccessMessage(`we have created your seller account, We will notify once your shop is        verified`);    setErrorMessage(""); return res.data.data.userId})
+                .then((userId)=>{setShop({...shop, ["userId"]:userId}); dispatch(shopRequestsActions.addRequests(shop))})
+                .catch((err)=>{console.log(err); setErrorMessage(err.request.response); setSuccessMessage("")})
+            }
             //navigate("/users")      
         }
         else{
@@ -160,17 +197,42 @@ const Register = () => {
                     fontWeight: 700,
                     color: 'green',
                     justifyContent:"center", alignItems:"center", mt:"2"}}>Register</Typography>
+             <Paper >
+             <ToggleButtonGroup  color='primary'
+                value={alignment}
+                exclusive
+                onChange={handleToogleChange}
+                aria-label="Platform"
+                sx={{
+                    justifyContent:"center",
+                    alignItems:"center",
+                    width:"100%"
+                }}>
+                <ToggleButton value="CUSTOMER">
+                    CUSTOMER
+                </ToggleButton>
+                <ToggleButton value="SHOP KEEPER">
+                    SHOP
+                </ToggleButton>
+            </ToggleButtonGroup>
+            {(alignment==="SHOP KEEPER") &&<>
+                    <Paper sx={paperStyle}>
+                        <Input label="Shop Name" name="shopName" value={shop.shopName} onChange={handleShopOnChange}></Input>
+                    </Paper>
+                </>
+                }
+             </Paper>
                 <Paper elevation={1}>
                     <Stack border={0} direction='row'>
-                        <Input autoFocus label="FirstName" name="firstName" value={user.firstName} onChange={(event)=>{handleChange(event)}} required/>
-                        <Input label="LastName" name="lastName" value={user.lastName} onChange={(event)=>{handleChange(event)}} required/>
+                        <Input autoFocus label={alignment==="CUSTOMER"?"FirstName":"Owner/Shop Keeper First Name"} name="firstName" value={user.firstName} onChange={(event)=>{handleChange(event)}} required/>
+                        <Input label={alignment==="CUSTOMER"?"LastName":"Owner/Shop Keeper Last Name"} name="lastName" value={user.lastName} onChange={(event)=>{handleChange(event)}} required/>
                     </Stack>
                 </Paper>
                 
                 <Paper elevation={1} sx={paperStyle}>
                     <Stack direction='column'>
                         <Stack border={0} direction='row'>
-                            <Input label="PhoneNumber" name="phoneNumber" value={user.phoneNumber} onChange={(event)=>{handleChange(event)}} disabled={showOtpComponent} required/>
+                            <Input label="PhoneNumber" name="phoneNumber" value={user.phoneNumber} onChange={(event)=>{handleChange(event); handleShopOnChange(event)}} disabled={showOtpComponent} required/>
                             <Button sx={{}} variant="text" onClick={handleOtpVerification}>Verify OTP</Button>
                         </Stack>
                     <Typography variant='inherit' ml={2} sx={{color:'red'}}>{otpVerificationMessage}</Typography>
@@ -194,16 +256,24 @@ const Register = () => {
                 </Paper>
 
                 <Paper sx={paperStyle}>
+                    <Stack direction="column" spacing={1} ml={1}>
+                    {(alignment==="SHOP KEEPER")&&<Typography variant='caption'>shop Address</Typography>}
                     <Input type="text" label="PinCode" name="pinCode" value={address.pinCode} onChange={handlePincodeChange} error={pinCodeValiDate!==""}
                         helperText={pinCodeValiDate!==""?"PinCode is Not Valid":""} required/>
                     
                         {pinCodeValiDate==="" && (<>
-                                <Input label="State" type="text" value={address.state} disabled/>
-                                <Input label="District" type="text" value={address.district} disabled/>
-                                <Input label="City" type="text" value={address.city} disabled/>
-                                <Stack direction='column'>
+                                <Stack direction="row">
+                                    <Input label="State" type="text" value={address.state} disabled/>
+                                    <Input label="District" type="text" value={address.district} disabled/>
+                                </Stack>
+                                <Stack direction="row">
+                                    <Input label="City" type="text" value={address.city} disabled/>
+                                    <Input type="text"label="LandMark" name="landMark" value={address.landMark} onChange={handleChangeAddress} required/>
+                                </Stack>
+                                <Stack direction='column' m={2}>
                                     <InputLabel id='register-select-label'>Locality</InputLabel>
                                     <Select
+                                        variant='standard'
                                         labelId='register-select-label'
                                         label='Locality'
                                         id="register-select"
@@ -215,12 +285,26 @@ const Register = () => {
                                             return <MenuItem key={index} value={locality.officeName}>{locality.officeName}</MenuItem>
                                         })}
                                     </Select>
-                                    <Input type="text"label="LandMark" name="landMark" value={address.landMark} onChange={handleChangeAddress} required/>
-                                </Stack></>)}
-                            
+                                </Stack>
+                                </>)}  
+                    </Stack>  
                 </Paper>
+                {/* <FormControl>
+                        <FormLabel id="demo-controlled-radio-buttons-group">Register As</FormLabel>
+                        <RadioGroup
+                            aria-labelledby="demo-controlled-radio-buttons-group"
+                            name="role"
+                            defaultValue="CUSTOMER"
+                            value={user.role}
+                            onChange={handleChange}
+                        >
+                            <FormControlLabel value="CUSTOMER" control={<Radio />} label="CUSTOMER" />
+                            <FormControlLabel value="SHOP KEEPER" control={<Radio />} label="SHOP KEEPER" />
+                            {user.role=="SHOP KEEPER" && <Typography>We Will Notify You Once We Verify Your Account</Typography>}
+                        </RadioGroup>
+                    </FormControl> */}
                 <Paper style={{...paperStyle, justifyContent:'center'}}>
-                    <Button type="submit" sx={{backgroundColor:"lightGreen", width:"50%", alignContent:"center"}}><Typography variant="button" >Register</Typography></Button>
+                    <Button type="submit" sx={{backgroundColor:"lightGreen", width:"50%", alignContent:"center"}} disabled={isSubmitDisabled}><Typography variant="button" >Register</Typography></Button>
                 </Paper>
                 <Paper>
                     <Typography color='red'>{errorMessage}</Typography>

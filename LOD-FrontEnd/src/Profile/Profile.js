@@ -26,6 +26,7 @@ const Profile = ()=>{
                             <td>{user.firstName+user.lastName}</td>
                             <td>{user.phoneNumber}</td>
                             <td>{user.email}</td>
+                            <td>{user.role}</td>
                         </tr> 
                 </tbody>
                
