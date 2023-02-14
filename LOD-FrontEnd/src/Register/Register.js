@@ -83,6 +83,13 @@ const Register = () => {
         }
     }, [otpVerified])
     
+    useEffect(()=>{
+        if(shop.userId!==""){
+            console.log(shop)
+            dispatch(shopRequestsActions.addRequests(shop))
+        }
+    }, [shop])
+    
     const emailValidate = (email)=>{
         if(!email.match(/^([a-z0-9]+)@([a-z]{3,9})\.([a-z]{2,3})$/)){
             setEmailValidate("email is not in a correct format")
@@ -178,7 +185,7 @@ const Register = () => {
             else{
                 await axios.post("http://localhost:8081/lod/user/signup", user)
                 .then((res)=>{console.log(res.data);setSuccessMessage(`we have created your seller account, We will notify once your shop is        verified`);    setErrorMessage(""); return res.data.data.userId})
-                .then((userId)=>{setShop({...shop, ["userId"]:userId}); dispatch(shopRequestsActions.addRequests(shop))})
+                .then((userId)=>{console.log(userId); setShop({...shop, ["userId"]:userId})})
                 .catch((err)=>{console.log(err); setErrorMessage(err.request.response); setSuccessMessage("")})
             }
             //navigate("/users")      

@@ -13,6 +13,7 @@ import Profile from './Profile/Profile';
 import ProtectedComponent from './ProtectedComponent/ProtectedComponent';
 import OnlyAdmin from './ProtectedComponent/OnlyAdmin';
 import ShowShops from './shops/ShowShops';
+import ShopRequests from './admin/ShopRequests';
 
 function App() {
   return(
@@ -32,6 +33,7 @@ function App() {
               <Route path="/shops" element={<ShowShops></ShowShops>}></Route>
               <Route path='/users' element={<OnlyAdmin><User></User></OnlyAdmin>}></Route>
               <Route path='/profile' element={<ProtectedComponent><Profile></Profile></ProtectedComponent>}></Route>
+              <Route path='/shopRequests' element={<OnlyAdmin><ShopRequests></ShopRequests></OnlyAdmin>}></Route>
             </Routes>
           </Grid>
         </Grid>

@@ -52,11 +52,18 @@ const NavBar = ()=>{
                                 </Button>
                             </Link>
                                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                                    {(isLoggedIn && user.role=="ADMIN") && <Link to='/users'><Button
-                                        sx={{ my: 2, color: 'white', display: 'block' }}
-                                    >
-                                        USERS
-                                    </Button></Link>}
+                                    {(isLoggedIn && user.role=="ADMIN") &&<>
+                                        <Link to='/users'><Button
+                                            sx={{ my: 2, color: 'white', display: 'block' }}
+                                        >
+                                            USERS
+                                        </Button></Link>
+                                        <Link to='/shopRequests'><Button
+                                            sx={{ my: 2, color: 'white', display: 'block' }}
+                                        >
+                                            SHOP REQUESTS
+                                        </Button></Link>
+                                    </> }
                                     <Link to="/shops">
                                         <Button sx={{ my: 2, color: 'white', display: 'block' }}>
                                                 SHOPS
