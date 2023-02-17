@@ -11,7 +11,7 @@ const Layout = () => {
     const pages = [["Home","/layout/home"], ["Users","/users"], ["SignUp","/layout/register"], ["LogIn", "/layout/login"]]
     return(<>
             <Grid item xs={12} container border={0} sx={{height: "50%", backgroundImage:`url(${image})`, justifyContent:'center', alignItems:'center'}}>
-                    <Typography  variant="h1" color='Background'>LOD</Typography> 
+                <Typography  variant="h1" color='Background'>LOD</Typography> 
             </Grid>
             <Grid item xs={12} border={2} container sx={{ height: "50%", display:"flex", justifyContent:"center", alignContent:"baseLine"}}>
                 <Routes>

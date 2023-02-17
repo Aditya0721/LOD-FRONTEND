@@ -21,11 +21,12 @@ const ShowShops = ()=>{
                             <Card key={index}>
                                 <CardHeader title={shop.shopName}/>
                                 <CardContent>
-                                    <Typography>{shop.phoneNumber}</Typography>
-                                    <Typography>{shop.address.city}</Typography>
-                                    <Typography>{shop.address.locality}</Typography>
-                                    <Typography>{shop.address.landMark}</Typography>
-                                    <Typography>{shop.rating}</Typography>
+                                    <Typography>phoneNumber:{shop.phoneNumber}</Typography>
+                                    <Typography>city:{shop.address.city}</Typography>
+                                    <Typography>locality:{shop.address.locality}</Typography>
+                                    <Typography>landMark:{shop.address.landMark}</Typography>
+                                    <Typography>Rating:{shop.rating}</Typography>
+                                    <Typography style={shop.isVerified==="REJECTED"?{color:"red"}:{color:"green"}}>{shop.isVerified}</Typography>
                                     <Button>Menu</Button>
                                 </CardContent>
                             </Card>

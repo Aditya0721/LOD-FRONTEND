@@ -1,5 +1,8 @@
 import { Avatar, Card, CardContent, CardHeader, CardMedia, Typography } from "@mui/material"
 import { Box, Stack } from "@mui/system"
+import axios from "axios"
+import { useState, useEffect } from "react"
+import { useSelector } from "react-redux"
 import useFetch from "../customHooks/useFetch"
 import testImg from "../static/test_image-1.png"
 
@@ -7,9 +10,18 @@ const User = ()=>{
 
     const url = "http://localhost:8081/lod/admin/users"
 
+    const user = useSelector(state=>state.auth.user)
     //console.log(useFetch(url))
 
-    const [userList, setUserList] = useFetch(url)
+    const [userList, setUserList] = useState([])
+
+    useEffect(()=>{
+        axios.get(url,{headers:{
+            "x-auth-token":user.token
+        }}).
+        then((res)=>{setUserList(res.data)})
+        .catch((err)=>{console.log(err.rersponse.error)})
+    },[])
 
     const testSetUserList = ()=>{
         console.log("inside test function")

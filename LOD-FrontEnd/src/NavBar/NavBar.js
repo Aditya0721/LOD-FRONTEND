@@ -1,4 +1,4 @@
-import {Dialog, Box, Button, AppBar, Grid, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, IconButton } from "@mui/material"
+import {Dialog, Box, Button, AppBar, Grid, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, IconButton, Stack } from "@mui/material"
 import { Container } from "@mui/system"
 import { Link, Outlet, Routes, Route} from "react-router-dom"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -83,9 +83,14 @@ const NavBar = ()=>{
                                 {isLoggedIn && 
                                 <>
                                 <Box sx={{alignContent:'end'}}>
-                                        <Link to="/profile"><IconButton>
-                                            <AccountCircleIcon fontSize="large"></AccountCircleIcon>
-                                        </IconButton></Link>
+                                        <Link to="/profile">
+                                        <Stack direction='column'>
+                                            <IconButton>
+                                                <AccountCircleIcon fontSize="large"></AccountCircleIcon>
+                                            </IconButton>
+                                            <Typography color='white'>{user.firstName} {user.lastName}</Typography>
+                                        </Stack>
+                                        </Link>
                                 </Box>
                                  <Box sx={{alignContent:'end'}}>
                                  <Button
