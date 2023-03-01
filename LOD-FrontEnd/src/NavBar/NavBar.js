@@ -13,6 +13,7 @@ import { authActions } from "../store/authSlice";
 import { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { dialogActions } from "../store/logInRegisterDialogSlice";
+import LiquorStoreIcon from "../Icon/LiquorStoreIcon";
 
 const NavBar = ()=>{
     const pages = [["Users","/users"]]

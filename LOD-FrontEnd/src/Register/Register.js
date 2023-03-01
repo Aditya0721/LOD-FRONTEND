@@ -202,7 +202,7 @@ const Register = () => {
             <Stack direction='column'>
             <Typography variant="h4" sx={{fontFamily: 'monospace',
                     fontWeight: 700,
-                    color: 'green',
+                    color: 'primary',
                     justifyContent:"center", alignItems:"center", mt:"2"}}>Register</Typography>
              <Paper >
              <ToggleButtonGroup  color='primary'

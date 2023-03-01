@@ -14,6 +14,9 @@ import ProtectedComponent from './ProtectedComponent/ProtectedComponent';
 import OnlyAdmin from './ProtectedComponent/OnlyAdmin';
 import ShowShops from './shops/ShowShops';
 import ShopRequests from './admin/ShopRequests';
+import LiquorStoreIcon from './Icon/LiquorStoreIcon';
+import Menu from './Menu/Menu';
+import './App.css'
 
 function App() {
   return(
@@ -25,7 +28,7 @@ function App() {
           <Grid item xs={12}>
               <NavBar></NavBar>
           </Grid>
-          <Grid item container xs={12} border={1} height='100%' display='flex' justifyContent="center">
+          <Grid item container xs={12} height='100%' display='flex' justifyContent="center">
             <Routes>
               <Route path="/*" element={<Layout></Layout>}></Route>
               <Route path="/layout/*" element={<Layout />} />
@@ -34,6 +37,7 @@ function App() {
               <Route path='/users' element={<OnlyAdmin><User></User></OnlyAdmin>}></Route>
               <Route path='/profile' element={<ProtectedComponent><Profile></Profile></ProtectedComponent>}></Route>
               <Route path='/shopRequests' element={<OnlyAdmin><ShopRequests></ShopRequests></OnlyAdmin>}></Route>
+              <Route path='/menu/:shopId' element={<Menu></Menu>}></Route>
             </Routes>
           </Grid>
         </Grid>

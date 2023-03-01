@@ -2,16 +2,13 @@ import { Card, CardContent, CardHeader, Typography, Button} from "@mui/material"
 import { Box, Stack } from "@mui/system"
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Link } from "react-router-dom"
+import { shopActions } from "../store/shop"
 
 const ShowShops = ()=>{
 
-    const [shops, setShops] = useState([])
-
-    useEffect(()=>{
-        axios.get("http://localhost:8081/lod/shop/shops").
-        then((res)=>{console.log(res.data); setShops(res.data)}).
-        catch((err)=>{console.log(err)})  
-    },[])
+    const shops = useSelector(state=>state.shops.shops)
 
     return(<>
             <Box border={1} sx={{display:'flex', justifyContent:'start', alignItems:'baseline', alignContent:'flex-start'}}>
@@ -27,7 +24,7 @@ const ShowShops = ()=>{
                                     <Typography>landMark:{shop.address.landMark}</Typography>
                                     <Typography>Rating:{shop.rating}</Typography>
                                     <Typography style={shop.isVerified==="REJECTED"?{color:"red"}:{color:"green"}}>{shop.isVerified}</Typography>
-                                    <Button>Menu</Button>
+                                    <Link to={`/menu/${shop.shopId}`}><Button>Menu</Button></Link>
                                 </CardContent>
                             </Card>
                         )

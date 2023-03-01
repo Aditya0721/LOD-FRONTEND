@@ -39,6 +39,7 @@ const LogIn = (props)=>{
             navigate('/profile')
         }
     }, [otpVerified])
+    
     const handleToogleChange = (event) => {
         setAlignment(event.target.value);
       };

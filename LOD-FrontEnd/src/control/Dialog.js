@@ -16,7 +16,7 @@ const CustomDialog = (props)=>{
                 flexWrap: 'wrap',
                 justifyContent:'center',
                 alignContent:'center'}}>
-            <DialogContent sx={{backgroundColor:"black", display:'flex',direction:'column', justifyContent:"end"}}>
+            <DialogContent sx={{backgroundColor:"white", display:'flex',direction:'column', justifyContent:"end"}}>
                 {props.children}
                 <IconButton onClick={()=>{dispatch(dialogActions.close())}} sx={{ height:'5px'}}><Close color='error'></Close></IconButton></DialogContent>
         </Dialog>
