@@ -101,7 +101,7 @@ const LogIn = (props)=>{
             }}>
                     <Typography variant="h3" m={1} sx={{fontFamily: 'monospace',
                     fontWeight: 700,
-                    color: 'lightblue',
+                    color:'dodgerblue',
                     alignContent:"center"}}>LogIn</Typography>
                      <Paper elevation={1} sx={{...paperStyle, width:'100%'}}>
                         <ToggleButtonGroup color='primary'
@@ -120,7 +120,7 @@ const LogIn = (props)=>{
                      </Paper>
                     <Stack direction="column" m={2} width='100%' border={0} >
                     {alignment=="phoneNumber"?
-                        <Paper elevation={1} sx={{...paperStyle, width:'100%', backgroundColor:'lightBlue'}}>
+                        <Paper elevation={1} sx={{...paperStyle, width:'100%', backgroundColor:'white'}}>
                             <Stack direction="column" display="flex" justifyContent="center" alignContent="center" sx={{width:"80%"}}>
                                 {/* <Typography variant='button'  alignContent="center" sx={typographyStyle} m={1}>LogIn with your PhoneNumber</Typography> */}
                                 {(!showOtpComponent) && <>
@@ -135,7 +135,7 @@ const LogIn = (props)=>{
                             </Stack>
                         </Paper>:
                         // <Divider>OR</Divider>
-                        <Paper elevation={1} sx={{...paperStyle, width:'100%', backgroundColor:'lightBlue'}}> 
+                        <Paper elevation={1} sx={{...paperStyle, width:'100%', backgroundColor:'white'}}> 
                             <Stack direction="column" display="flex" justifyContent="center" alignContent="center" sx={{width:"80%"}}>
                             {/* <Typography variant='button'  alignContent="center" sx={typographyStyle} m={1}>LogIn with your Email</Typography> */}
                                 <TextField autoFocus label="Email" name="phoneNumber" value={emailId} onChange={(e)=>{setEmailId(e.target.value)}} size="small" sx={{m:1}}></TextField>

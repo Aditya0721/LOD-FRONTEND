@@ -7,7 +7,15 @@ import { Link } from "react-router-dom"
 import { shopActions } from "../store/shop"
 
 const ShowShops = ()=>{
+    
+    const dispatch = useDispatch()
 
+    useEffect(()=>{
+        axios.get("http://localhost:8081/lod/shop/shops").
+        then((res)=>{console.log(res.data); dispatch(shopActions.setShops(res.data))}).
+        catch((err)=>{console.log(err)})  
+    },[])
+    
     const shops = useSelector(state=>state.shops.shops)
 
     return(<>
@@ -24,7 +32,7 @@ const ShowShops = ()=>{
                                     <Typography>landMark:{shop.address.landMark}</Typography>
                                     <Typography>Rating:{shop.rating}</Typography>
                                     <Typography style={shop.isVerified==="REJECTED"?{color:"red"}:{color:"green"}}>{shop.isVerified}</Typography>
-                                    <Link to={`/menu/${shop.shopId}`}><Button>Menu</Button></Link>
+                                    <Link to={`/menu/${shop.shopId}`}><Button onClick={()=>{dispatch(shopActions.setCurrentShop(shop))}}>Menu</Button></Link>
                                 </CardContent>
                             </Card>
                         )

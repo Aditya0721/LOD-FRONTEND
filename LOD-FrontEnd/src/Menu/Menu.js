@@ -1,35 +1,29 @@
 import { Button, Card, CardContent, CardHeader, CardMedia, Divider, Grid, Paper, Typography } from "@mui/material"
 import { Box, Stack } from "@mui/system"
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router"
+import AddProduct from "../AddProduct/AddProduct"
 import img from "../static/bottle-1.jpg"
+import { shopActions } from "../store/shop"
 
 const Menu = ()=>{
     const params = useParams()
     const shopId = params.shopId
-    const shops = useSelector(state=>state.shops.shops)
     const user = useSelector(state=>state.auth.user)
 
     const [cart, setCart] = useState([])
 
-    const [shop, setShop] = useState({menu:[], address:{}})
-
-    const [menu, setMenu] = useState([])
-
     const [totalPrice, setTotalPrice] = useState([])
 
+    const [showAddProduct, setShowAddProduct] = useState(false)
+
+    const shop = useSelector(state=>state.shops.currentShop)
+
     useEffect(()=>{
-        setShop(shops.find((shop)=>{return shop.shopId==shopId}))
+        console.log(shop)
     },[])
-
-    useEffect(()=>{
-        if(shop){
-            console.log(shop)
-            setMenu(shop.menu)
-        }
-    },[shop])
-
+    
     const addToCart = (product)=>{
         console.log(cart)
         const pId = product.productId
@@ -51,6 +45,7 @@ const Menu = ()=>{
         }
     }
     return(
+        <>
         <Grid item container xl={12} sx={{display:'flex', justifyContent:'flex-start'}}>
             <Grid item xl={12} border={1} sx={{height:'200px', display:'flex', justifyContent:'center', alignItems:'center', backgroundColor:'black'}}>
                 <Card sx={{backgroundColor:'white'}}>
@@ -65,14 +60,14 @@ const Menu = ()=>{
             </Grid>
             <Grid item container xl={12} border={1} sx={{height:'200vh', overflow:'hidden'}}> 
                 <Grid item border={1} xl={2} sx={{display:'flex', justifyContent:'right', alignItem:'right'}}>
-                    <Stack border={1} sx={{display:'flex', justifyContent:'right', alignContent:'space-around'}}>
+                    <Stack sx={{display:'flex', justifyContent:'right', alignContent:'space-around'}}>
                         <Typography>Best Seller</Typography>
                         <Typography>Best Seller</Typography>
                         <Typography>Best Seller</Typography>
                         <Typography>Best Seller</Typography>
                         <Typography>Best Seller</Typography>
                         {user.role==="SHOP KEEPER" &&
-                            <Button>Add Item</Button>
+                            <Button onClick={()=>{setShowAddProduct(true)}}>Add Item</Button>
                         }
                     </Stack>
                 </Grid>
@@ -88,7 +83,7 @@ const Menu = ()=>{
                             />
                             <CardContent>
                                 <Stack sx={{display:'flex', justifyContent:'space-around'}} divider={<Divider orientation="horizontal" sx={{ borderBottomWidth: 3 }} flexItem />} spacing={2} >
-                                    {menu.map((product,index)=>
+                                    {shop.menu.map((product,index)=>
                                         (<Card key={index} sx={{height:'250px'}}>
                                                     <CardHeader
                                                         title={product.productId}
@@ -137,8 +132,9 @@ const Menu = ()=>{
                     
                 </Grid>
             </Grid>
-            
         </Grid>
+        {showAddProduct && <AddProduct showAddProduct={showAddProduct} setShowAddProduct={setShowAddProduct}></AddProduct>}
+        </>
     )
 }
 

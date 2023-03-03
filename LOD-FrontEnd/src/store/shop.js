@@ -2,13 +2,22 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const shopSlice = createSlice({
     name:'shop',
-    initialState:{shops:[]},
+    initialState:{shops:[], currentShop:{}},
     reducers:{
         setShops:(state, action)=>{
             state.shops = action.payload
         },
         addShop:(state, action)=>{
             state.shops = [...state.shops, action.payload]
+        },
+        setCurrentShop:(state, action)=>{
+            state.currentShop = {...action.payload}
+        },
+        addProductToMenu:(state, action)=>{
+            state.currentShop = {...state.currentShop,["menu"]:[...state.currentShop.menu, action.payload]}
+        },
+        updateMenu:(state, action)=>{
+            state.currentShop = {...state.currentShop,["menu"]:action.payload}
         }
     }
 })
