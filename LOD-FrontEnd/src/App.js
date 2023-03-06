@@ -17,6 +17,8 @@ import ShopRequests from './admin/ShopRequests';
 import LiquorStoreIcon from './Icon/LiquorStoreIcon';
 import Menu from './Menu/Menu';
 import './App.css'
+import OnlyShopKeeper from './ProtectedComponent/OnlyShopKeeper';
+import MyShop from './shopOwner/MyShop';
 
 function App() {
   return(
@@ -34,6 +36,7 @@ function App() {
               <Route path="/layout/*" element={<Layout />} />
               {/* <Route to="/users" element={<User></User>}></Route> */}
               <Route path="/shops" element={<ShowShops></ShowShops>}></Route>
+              <Route path="/shops/:userId" element={<OnlyShopKeeper><MyShop></MyShop></OnlyShopKeeper>}></Route>
               <Route path='/users' element={<OnlyAdmin><User></User></OnlyAdmin>}></Route>
               <Route path='/profile' element={<ProtectedComponent><Profile></Profile></ProtectedComponent>}></Route>
               <Route path='/shopRequests' element={<OnlyAdmin><ShopRequests></ShopRequests></OnlyAdmin>}></Route>

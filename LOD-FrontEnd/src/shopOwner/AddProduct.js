@@ -56,7 +56,7 @@ const AddProduct = (props)=>{
 
     const handleSubmit = ()=>{  
         console.log(product)
-        axios.put("http://localhost:8081/lod/shop/menu/add/T48601", {"products":[
+        axios.put("http://localhost:8081/lod/shop/menu/add/"+shop.shopId, {"products":[
             product
         ]},{headers:{
             "x-auth-token":user.token

@@ -3,7 +3,7 @@ import { Box, Stack } from "@mui/system"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router"
-import AddProduct from "../AddProduct/AddProduct"
+import AddProduct from "../shopOwner/AddProduct"
 import img from "../static/bottle-1.jpg"
 import { shopActions } from "../store/shop"
 

@@ -61,14 +61,17 @@ const ShopRequests = ()=>{
         catch((err)=>{console.log(err)})})
         .catch((err)=>{console.log(err)})
 
-        await axios.put("http://localhost:8081/lod/admin/closeRequest/"+requestToBeUpdated,{},{headers:{
+        await axios.put("http://localhost:8081/lod/admin/closeRequest/"+requestToBeUpdated,{"action":updateStatus},{headers:{
             "x-auth-token":user.token
             }}).
         then((res)=>{
             axios.get("http://localhost:8081/lod/admin/fetchRequests", {headers:{
             "x-auth-token":user.token
             }}).
-            then((res)=>{setRequests(res.data)}).
+            then((res)=>{result = res.data.map((req)=>{return{...req, viewShop:false}}); return result}).
+            then((res)=>{console.log(res)
+                setRequests(res)
+                setToggledData(res.filter(req=>req.status==="OPEN"))}).
             catch((err)=>{console.log(err)})}).
         catch((err)=>{console.log(err)})
     }
@@ -96,7 +99,7 @@ const ShopRequests = ()=>{
                                 <Paper>
                                     <Card style={request.status==="CLOSED"?{opacity:0.4}:{}}>
                                         <CardHeader
-                                            title="Approve Request"/>
+                                            title={request.status==="CLOSED"?`Request ${request.action}`:'APPROVE REQUEST'}/>
                                         <CardContent>RequestId: {request.requestId}</CardContent>
                                         <CardContent>ShopId: {request.shopId}</CardContent>
                                         <CardContent>AdminId: {request.assignedTo}</CardContent>

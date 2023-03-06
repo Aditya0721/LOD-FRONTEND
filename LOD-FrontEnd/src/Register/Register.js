@@ -183,9 +183,24 @@ const Register = () => {
                 .catch((err)=>{console.log(err); setErrorMessage(err.request.response); setSuccessMessage("")})
             }
             else{
-                await axios.post("http://localhost:8081/lod/user/signup", user)
-                .then((res)=>{console.log(res.data);setSuccessMessage(`we have created your seller account, We will notify once your shop is        verified`);    setErrorMessage(""); return res.data.data.userId})
-                .then((userId)=>{console.log(userId); setShop({...shop, ["userId"]:userId})})
+                await axios.post("http://localhost:8081/lod/user/signup", {user, shop})
+                .then((res)=>{
+                    console.log(res.data.data);
+                    setSuccessMessage(`we have created your seller account, We will notify once your shop is verified`);
+                    setErrorMessage(""); 
+                    return res.data.data})
+                .then((res)=>{
+                    console.log(res);
+                    setShop({...shop, ["userId"]:res.userId});
+                    return res}).
+                then((res)=>{axios.post("http://localhost:8081/lod/admin/shopRequest/A89431",{"shopId":res.shopId}).
+                then((res)=>{
+                        console.log(res.data)
+                    }).
+                    catch((err)=>{
+                        console.log(err)
+                })
+                })
                 .catch((err)=>{console.log(err); setErrorMessage(err.request.response); setSuccessMessage("")})
             }
             //navigate("/users")      

@@ -70,6 +70,13 @@ const NavBar = ()=>{
                                                 SHOPS
                                         </Button>
                                     </Link>
+                                    {(isLoggedIn && user.role=="SHOP KEEPER") &&<>
+                                        <Link to={`/shop/${user.userId}`}><Button
+                                            sx={{ my: 2, color: 'white', display: 'block' }}
+                                        >
+                                            MY SHOPS
+                                        </Button></Link>
+                                    </> }
                                     {!isLoggedIn && <Button
                                         sx={{ my: 2, color: 'white', display: 'block' }} onClick={()=>{dispatch(dialogActions.registerView()); dispatch(dialogActions.open())}}
                                     >
