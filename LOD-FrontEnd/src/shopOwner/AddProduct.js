@@ -26,7 +26,9 @@ const AddProduct = (props)=>{
         productId:'',
         productName:'',
         quantity:'',
-        price:''
+        price:'',
+        brand:'',
+        type:''
     })
 
     const shop = useSelector(state=>state.shops.currentShop)
@@ -45,16 +47,18 @@ const AddProduct = (props)=>{
     },[itemId])
 
     useEffect(()=>{
+        console.log(user)
         if(brand!=="" && type!==""){
             axios.get("http://localhost:8081/lod/product/products"+`?brand=${brand}&type=${type}`,{headers:{
                 "x-auth-token":user.token
             }}).
-            then((res)=>{console.log(res); setProductList(res.data)}).
+            then((res)=>{console.log(res); setProductList(res.data); setProduct({...product,["brand"]:brand,["type"]:type})}).
             catch((err)=>{console.log(err)})
         }
     },[brand])
 
-    const handleSubmit = ()=>{  
+    const handleSubmit = (e)=>{
+        e.preventDefault()   
         console.log(product)
         axios.put("http://localhost:8081/lod/shop/menu/add/"+shop.shopId, {"products":[
             product
@@ -63,7 +67,8 @@ const AddProduct = (props)=>{
         }}).then((res)=>{props.setShowAddProduct(false); dispatch(shopActions.addProductToMenu(product))}).catch((err)=>{console.log(err)})
     }
 
-    const handleUpdate = ()=>{  
+    const handleUpdate = (e)=>{
+        e.preventDefault()  
         const updatedMenu = shop.menu.map((ele)=>{
             if(ele.productId===itemId){
                 return {...ele, ['quantity']:product.quantity, ['price']:product.price}
@@ -72,8 +77,8 @@ const AddProduct = (props)=>{
                 return ele
             }
         })
-        console.log(updatedMenu)
-        axios.put("http://localhost:8081/lod/shop/menu/update/T48601", {"menu":
+        console.log(updatedMenu, user)
+        axios.put("http://localhost:8081/lod/shop/menu/update/"+shop.shopId, {"menu":
             updatedMenu
         },{headers:{
             "x-auth-token":user.token
@@ -91,9 +96,11 @@ const AddProduct = (props)=>{
     return(<>
             <Dialog open={props.showAddProduct} onClose={()=>{props.setShowAddProduct(false)}}>
                 <DialogContent>
+                    <form onSubmit={handleSubmit}>
                     <Stack sx={{width:'500px'}}>
                         <InputLabel id='type-select-label'>Select A Type</InputLabel>
                         <Select
+                            required
                             variant='standard'
                             labelId='type-select-label'
                             label='liquorTypes'
@@ -107,6 +114,7 @@ const AddProduct = (props)=>{
                         </Select>
                         <InputLabel id='brand-select-label'>Select A Brand</InputLabel>
                         <Select
+                            required
                             variant='standard'
                             labelId='brand-select-label'
                             label='brands'
@@ -120,6 +128,7 @@ const AddProduct = (props)=>{
                         </Select>
                         <InputLabel id='product-name-select-label'>Select A Product</InputLabel>
                         <Select
+                            required
                             variant='standard'
                             labelId='product-name-select-label'
                             label='productName'
@@ -132,12 +141,13 @@ const AddProduct = (props)=>{
                                 })}
                         </Select>
                         {message}
-                        <TextField label='Quantity' variant='standard' name='quantity' value={product.quantity} onChange={(event)=>{setProduct({...product, ['quantity']:event.target.value})}}/>
-                        <TextField label='Price' variant='standard' name='price' value={product.price} onChange={(event)=>{setProduct({...product, ['price']:event.target.value})}}/>
+                        <TextField required label='Quantity' variant='standard' name='quantity' value={product.quantity} onChange={(event)=>{setProduct({...product, ['quantity']:event.target.value})}}/>
+                        <TextField required label='Price' variant='standard' name='price' value={product.price} onChange={(event)=>{setProduct({...product, ['price']:event.target.value})}}/>
                         {message==="This Product Is Already In Menu"? <Button type='submit' variant='contained' color='primary' onClick={handleUpdate}>Update Product</Button>:
-                            <Button type='submit' variant='contained' color='primary' onClick={handleSubmit}>ADD</Button>
+                            <Button type='submit' variant='contained' color='primary'>ADD</Button>
                         }
                     </Stack>
+                    </form>
                 </DialogContent> 
             </Dialog>
     </>)

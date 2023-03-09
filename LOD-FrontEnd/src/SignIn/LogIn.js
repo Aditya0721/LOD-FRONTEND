@@ -8,6 +8,7 @@ import axios from "axios"
 import { useDispatch } from 'react-redux';
 import { authActions } from '../store/authSlice';
 import { dialogActions } from "../store/logInRegisterDialogSlice"
+import jwtDecode from "jwt-decode"
 
 const LogIn = (props)=>{
 
@@ -33,10 +34,22 @@ const LogIn = (props)=>{
 
     useEffect(()=>{
         if(otpVerified){
+           axios.post("http://localhost:8081/lod/user/login/?phoneNumber="+phoneNumber).
+            then((res)=>{
+                const decoded = jwtDecode(res.data.token, 'SECRET SALT')
+                const user = decoded._doc
+                user.token = res.data.token
+                console.log(user)
+                dispatch(authActions.setUser(user));
+                dispatch(authActions.logIn()); 
+                dispatch(dialogActions.close());
+                localStorage.setItem("token", res.data.token);
+            }).
+            catch((err)=>{console.log(err)})
             console.log("userLoggedIn")
             setOtpVerificationMessage("Logged In")
             dispatch(authActions.logIn())
-            navigate('/profile')
+            navigate("/profile")
         }
     }, [otpVerified])
     
@@ -77,13 +90,24 @@ const LogIn = (props)=>{
             setShowOtpComponent(true)
         }
     }
+
     const handleLogIn = async()=>{
         await axios.post("http://localhost:8081/lod/user/login/?email="+emailId,{
             email:emailId,
             password:password
-        }).then((res)=>{setEmailVerificationMsg("");dispatch(authActions.setUser(res.data)); dispatch(authActions.logIn()); dispatch(dialogActions.close())}).
+        }).then((res)=>{setEmailVerificationMsg("");
+                        const decoded = jwtDecode(res.data.token, 'SECRET SALT')
+                        const user = decoded._doc
+                        user.token = res.data.token
+                        console.log(user)
+                        dispatch(authActions.setUser(user));
+                        dispatch(authActions.logIn()); 
+                        dispatch(dialogActions.close());
+                        localStorage.setItem("token", res.data.token);
+                    }).
         catch((err)=>{console.log(err.response.data); setEmailVerificationMsg(err.response.data)})
     }
+
     return(<>
             <Box border={0} sx={{
                 display: 'flex',

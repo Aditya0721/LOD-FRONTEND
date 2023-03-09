@@ -7,14 +7,10 @@ import AddProduct from "../shopOwner/AddProduct"
 import img from "../static/bottle-1.jpg"
 import { shopActions } from "../store/shop"
 
-const Menu = ()=>{
+const EditMenu = ()=>{
     const params = useParams()
     const shopId = params.shopId
     const user = useSelector(state=>state.auth.user)
-
-    const [cart, setCart] = useState([])
-
-    const [totalPrice, setTotalPrice] = useState([])
 
     const [showAddProduct, setShowAddProduct] = useState(false)
 
@@ -24,26 +20,6 @@ const Menu = ()=>{
         console.log(shop)
     },[])
     
-    const addToCart = (product)=>{
-        console.log(cart)
-        const pId = product.productId
-
-        if(!cart.map((ele)=>{return ele.product.productId}).includes(pId)){
-            setCart([...cart,{product:product, quantity:1}])
-            console.log(cart)
-        }
-        else{
-            const updatedCart = cart.map((ele)=>{
-                if(ele.product.productId===pId){
-                    return {product:ele.product, quantity:ele.quantity+1}
-                }
-                else{
-                    return ele
-                }
-            })
-            setCart(updatedCart)
-        }
-    }
     return(
         <>
         <Grid item container xl={12} sx={{display:'flex', justifyContent:'flex-start'}}>
@@ -66,6 +42,7 @@ const Menu = ()=>{
                         <Typography>Best Seller</Typography>
                         <Typography>Best Seller</Typography>
                         <Typography>Best Seller</Typography>
+                        <Button onClick={()=>{setShowAddProduct(true)}}>Add Item</Button>
                     </Stack>
                 </Grid>
                 <Grid item xl={8} border={1} sx={{maxHeight:'200vh', overflow:'auto', display:'flex', justifyContent:'center', alignItems:'baseLine'}}>
@@ -85,48 +62,22 @@ const Menu = ()=>{
                                                     <CardHeader
                                                         title={product.productName}
                                                     />
-                                                    <Stack direction='row' paddingBottom={5}>
+                                                    <Stack direction='row' paddingBottom={5} spacing={3}>         
                                                         <CardContent border={1} sx={{width:'70%'}}>
                                                             <Typography>Price:{product.price}</Typography>
                                                             <Typography>Quantiy:{product.quantity}</Typography>
                                                             <Typography>brand:{product.brand}</Typography>
                                                             <Typography>type:{product.type}</Typography>
                                                         </CardContent>
-                                                        <Stack direction='column' sx={{width:'20%'}}>
-                                                            <CardMedia component="img" image={img} />
-                                                            <Button variant='contained' color='success' onClick={()=>{addToCart(product)}}>ADD</Button>
-                                                        </Stack>
+                                                        <CardMedia component="img" image={img} height={200} sx={{objectFit: "contain" }}/>
                                                     </Stack>      
                                                 </Card>
                                         )
                                     )}
-                                    
                                 </Stack>
                             </CardContent>
                         </Box>
                     </Stack>
-                </Grid>
-                <Grid item xl={2} sx={{height:'50vh',overflow:'auto'}}>
-                    <Paper elevation={4}>
-                        BASKET
-                        {cart.map((ele, index)=>{
-                            return(<Card key={index} sx={{height:'150px'}}>
-                            <CardHeader
-                                title={ele.product.productId}
-                                draggable
-                                sx={{height:'5px'}}
-                            />
-                            <CardContent border={1} sx={{width:'100%'}}>
-                                <Typography>Price:</Typography>
-                                <Typography>brand:</Typography>
-                                <Typography>type:</Typography>
-                                <Typography>Quantiy:{ele.quantity}</Typography>
-                            </CardContent>
-                            </Card>
-                                )
-                        })}
-                    </Paper>
-                    
                 </Grid>
             </Grid>
         </Grid>
@@ -135,4 +86,4 @@ const Menu = ()=>{
     )
 }
 
-export default Menu
+export default EditMenu

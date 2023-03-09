@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux"
 import CustomDialog from "../control/Dialog"
+import useLogIn from "../control/CheckLogIn"
 import LogIn from "../SignIn/LogIn"
 import { dialogActions } from "../store/logInRegisterDialogSlice"
 
 const OnlyAdmin = ({children})=>{
-
+    
     const user = useSelector(state=>state.auth.user)
     const isLoggedIn = useSelector(state=>state.auth.isLoggedIn)
     const dispatch = useDispatch()

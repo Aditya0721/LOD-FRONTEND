@@ -13,11 +13,11 @@ const MyShop = ()=>{
     const params = useParams()
     useEffect(()=>{
         axios.get("http://localhost:8081/lod/shop/shops/"+params.userId).
-        then((res)=>{console.log(res.data); dispatch(shopActions.setShops(res.data))}).
+        then((res)=>{console.log(res.data); dispatch(shopActions.setMyShops(res.data))}).
         catch((err)=>{console.log(err)})  
     },[])
     
-    const shops = useSelector(state=>state.shops.shops)
+    const shops = useSelector(state=>state.shops.myShops)
 
     return(<>
             <Box border={1} sx={{display:'flex', justifyContent:'start', alignItems:'baseline', alignContent:'flex-start'}}>
@@ -33,7 +33,7 @@ const MyShop = ()=>{
                                     <Typography>landMark:{shop.address.landMark}</Typography>
                                     <Typography>Rating:{shop.rating}</Typography>
                                     <Typography style={shop.isVerified==="REJECTED"?{color:"red"}:{color:"green"}}>{shop.isVerified}</Typography>
-                                    <Link to={`/menu/${shop.shopId}`}><Button onClick={()=>{dispatch(shopActions.setCurrentShop(shop))}}>Menu</Button></Link>
+                                    <Link to={`/editMenu/${shop.shopId}`}><Button variant="contained" onClick={()=>{dispatch(shopActions.setCurrentShop(shop))}}>Edit Menu</Button></Link>
                                 </CardContent>
                             </Card>
                         )

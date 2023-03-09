@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const shopSlice = createSlice({
     name:'shop',
-    initialState:{shops:[], currentShop:{}},
+    initialState:{shops:[], currentShop:{}, myShops:[]},
     reducers:{
         setShops:(state, action)=>{
             state.shops = action.payload
@@ -18,6 +18,9 @@ const shopSlice = createSlice({
         },
         updateMenu:(state, action)=>{
             state.currentShop = {...state.currentShop,["menu"]:action.payload}
+        },
+        setMyShops:(state, action)=>{
+            state.myShops = action.payload
         }
     }
 })

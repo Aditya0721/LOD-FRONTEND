@@ -19,8 +19,25 @@ import Menu from './Menu/Menu';
 import './App.css'
 import OnlyShopKeeper from './ProtectedComponent/OnlyShopKeeper';
 import MyShop from './shopOwner/MyShop';
+import EditMenu from './shopOwner/EditMenu';
+import jwtDecode from 'jwt-decode';
+import { authActions } from './store/authSlice';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 function App() {
+
+  const dispatch = useDispatch()
+  useEffect(()=>{console.log(localStorage.getItem("token"))
+    if(localStorage.getItem("token")!==null){
+        const decoded = jwtDecode(localStorage.getItem("token"), 'SECRET SALT')
+        const user = decoded._doc
+        user.token = localStorage.getItem("token")
+        console.log(user)
+        dispatch(authActions.setUser(user))
+        dispatch(authActions.logIn())
+    }},[])
+
   return(
   <>
     <BrowserRouter>
@@ -37,6 +54,7 @@ function App() {
               {/* <Route to="/users" element={<User></User>}></Route> */}
               <Route path="/shops" element={<ShowShops></ShowShops>}></Route>
               <Route path="/shops/:userId" element={<OnlyShopKeeper><MyShop></MyShop></OnlyShopKeeper>}></Route>
+              <Route path='/editMenu/:shopId' element={<OnlyShopKeeper><EditMenu></EditMenu></OnlyShopKeeper>}></Route>
               <Route path='/users' element={<OnlyAdmin><User></User></OnlyAdmin>}></Route>
               <Route path='/profile' element={<ProtectedComponent><Profile></Profile></ProtectedComponent>}></Route>
               <Route path='/shopRequests' element={<OnlyAdmin><ShopRequests></ShopRequests></OnlyAdmin>}></Route>

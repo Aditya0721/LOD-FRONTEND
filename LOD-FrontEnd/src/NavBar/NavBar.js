@@ -10,12 +10,15 @@ import CustomDialog from "../control/Dialog"
 import image from "../static/hp-2.jpg"
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../store/authSlice";
-import { useState} from "react";
+import { useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { dialogActions } from "../store/logInRegisterDialogSlice";
 import LiquorStoreIcon from "../Icon/LiquorStoreIcon";
+import CheckLogIn from "../control/CheckLogIn";
+import jwtDecode from "jwt-decode";
 
 const NavBar = ()=>{
+    
     const pages = [["Users","/users"]]
     const view = useSelector(state=>state.dialog.view)
     const isLoggedIn = useSelector(state=>state.auth.isLoggedIn)
@@ -27,8 +30,10 @@ const NavBar = ()=>{
         dispatch(dialogActions.close())
         dispatch(authActions.logOut())
         dispatch(authActions.setUser({}))
+        localStorage.removeItem("token")
         navigate("/layout/home")
     }
+
     return(
         <>
             <AppBar position="static">
@@ -70,8 +75,8 @@ const NavBar = ()=>{
                                                 SHOPS
                                         </Button>
                                     </Link>
-                                    {(isLoggedIn && user.role=="SHOP KEEPER") &&<>
-                                        <Link to={`/shop/${user.userId}`}><Button
+                                    {(isLoggedIn && user.role==="SHOP KEEPER") &&<>
+                                        <Link to={`/shops/${user.userId}`}><Button
                                             sx={{ my: 2, color: 'white', display: 'block' }}
                                         >
                                             MY SHOPS

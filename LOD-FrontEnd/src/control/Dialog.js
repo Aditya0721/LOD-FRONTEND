@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Dialog, DialogContent, IconButton } from "@mui/material"
 import { useNavigate } from "react-router"
 import Close from "@mui/icons-material/Close"
@@ -7,9 +7,14 @@ import { dialogActions } from "../store/logInRegisterDialogSlice"
 
 const CustomDialog = (props)=>{
 
+    
     const open = useSelector(state=> state.dialog.isOpen)
     const dispatch = useDispatch()
-
+    useEffect(()=>{
+        if(localStorage.getItem('token')!==null){
+            dispatch(dialogActions.close())
+        }
+    }, [])
     return(<>
         <Dialog open={open} onClose={()=>{dispatch(dialogActions.close())}} sx={{
                 display: 'flex',
