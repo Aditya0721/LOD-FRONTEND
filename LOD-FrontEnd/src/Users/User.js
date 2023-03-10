@@ -3,12 +3,13 @@ import { Box, Stack } from "@mui/system"
 import axios from "axios"
 import { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
+import { allUsersUrl } from "../constants/url"
 import useFetch from "../customHooks/useFetch"
 import testImg from "../static/test_image-1.png"
 
 const User = ()=>{
 
-    const url = "http://localhost:8081/lod/admin/users"
+    const url = allUsersUrl
 
     const user = useSelector(state=>state.auth.user)
     //console.log(useFetch(url))

@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { authActions } from '../store/authSlice';
 import { dialogActions } from "../store/logInRegisterDialogSlice"
 import jwtDecode from "jwt-decode"
+import { logInByEmailUrl, logInByPhoneUrl } from "../constants/url"
 
 const LogIn = (props)=>{
 
@@ -34,7 +35,7 @@ const LogIn = (props)=>{
 
     useEffect(()=>{
         if(otpVerified){
-           axios.post("http://localhost:8081/lod/user/login/?phoneNumber="+phoneNumber).
+           axios.post(logInByPhoneUrl+phoneNumber).
             then((res)=>{
                 const decoded = jwtDecode(res.data.token, 'SECRET SALT')
                 const user = decoded._doc
@@ -44,12 +45,12 @@ const LogIn = (props)=>{
                 dispatch(authActions.logIn()); 
                 dispatch(dialogActions.close());
                 localStorage.setItem("token", res.data.token);
+                console.log("userLoggedIn")
+                setOtpVerificationMessage("Logged In")
+                dispatch(authActions.logIn())
+                navigate("/profile")
             }).
             catch((err)=>{console.log(err)})
-            console.log("userLoggedIn")
-            setOtpVerificationMessage("Logged In")
-            dispatch(authActions.logIn())
-            navigate("/profile")
         }
     }, [otpVerified])
     
@@ -70,7 +71,7 @@ const LogIn = (props)=>{
 
     const checkUserExists = async()=>{
         let flag = false
-        await axios.post("http://localhost:8081/lod/user/login/?phoneNumber="+phoneNumber).
+        await axios.post(logInByPhoneUrl+phoneNumber).
                     then((res)=>{flag = true; dispatch(authActions.setUser(res.data))}).
                     catch((err)=>{flag = false})
         return flag
@@ -92,7 +93,7 @@ const LogIn = (props)=>{
     }
 
     const handleLogIn = async()=>{
-        await axios.post("http://localhost:8081/lod/user/login/?email="+emailId,{
+        await axios.post(logInByEmailUrl+emailId,{
             email:emailId,
             password:password
         }).then((res)=>{setEmailVerificationMsg("");
