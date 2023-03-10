@@ -9,6 +9,7 @@ import Input from "../control/input"
 import paperStyle from "../config/style"
 import { useDispatch } from "react-redux"
 import { shopRequestsActions } from "../store/shopRequestSlice"
+import { pinCodeUrl } from "../constants/url"
 
 
 const Register = () => {
@@ -60,7 +61,7 @@ const Register = () => {
     const navigate = useNavigate()
 
     useEffect(()=>{
-        axios.get("http://localhost:4000/data").
+        axios.get(pinCodeUrl).
         then((res)=>{
             setPinCodeData(res.data); 
             setPinCodes(res.data.map((element)=> {return element.pincode.toString()}))

@@ -12,7 +12,7 @@ const ShowShops = ()=>{
     const dispatch = useDispatch()
 
     useEffect(()=>{
-        axios.get("http://localhost:8081/lod/shop/shops").
+        axios.get().
         then((res)=>{console.log(res.data); dispatch(shopActions.setShops(res.data))}).
         catch((err)=>{console.log(err)})  
     },[])
