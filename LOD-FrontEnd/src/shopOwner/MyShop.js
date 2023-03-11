@@ -4,6 +4,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useParams } from "react-router-dom"
+import { getUsersShop } from "../constants/url"
 import { shopActions } from "../store/shop"
 
 const MyShop = ()=>{
@@ -12,7 +13,8 @@ const MyShop = ()=>{
 
     const params = useParams()
     useEffect(()=>{
-        axios.get("http://localhost:8081/lod/shop/shops/"+params.userId).
+        // get the users shop
+        axios.get(getUsersShop+params.userId).
         then((res)=>{console.log(res.data); dispatch(shopActions.setMyShops(res.data))}).
         catch((err)=>{console.log(err)})  
     },[])

@@ -6,13 +6,14 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { shopActions } from "../store/shop"
 import shopImg from "../static/shop_1.jpg"
+import { allShopUrl } from "../constants/url"
 
 const ShowShops = ()=>{
     
     const dispatch = useDispatch()
 
     useEffect(()=>{
-        axios.get().
+        axios.get(allShopUrl).
         then((res)=>{console.log(res.data); dispatch(shopActions.setShops(res.data))}).
         catch((err)=>{console.log(err)})  
     },[])

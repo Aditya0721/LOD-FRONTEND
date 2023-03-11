@@ -3,6 +3,7 @@ import { Box, Container, Stack } from "@mui/system"
 import axios from "axios"
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { allShopUrl, closeRequestUrl, getShopRequestsUrl, updateShopStatusUrl } from "../constants/url"
 import Shop from "../shops/Shop"
 import { shopActions } from "../store/shop"
 
@@ -54,18 +55,18 @@ const ShopRequests = ()=>{
         setToggledData(data)
     }
     const updateStausChange = async()=>{
-        await axios.put(`http://localhost:8081/lod/shop/updateStatus/${shopToBeUpdated+"/"+updateStatus}`,{},{headers:{
+        await axios.put(updateShopStatusUrl+shopToBeUpdated+"/"+updateStatus,{},{headers:{
             "x-auth-token":user.token
-        }}).then((res)=>{axios.get("http://localhost:8081/lod/shop/shops").
+        }}).then((res)=>{axios.get(allShopUrl).
         then((res)=>{console.log(res.data); dispatch(shopActions.setShops(res.data))}).
         catch((err)=>{console.log(err)})})
         .catch((err)=>{console.log(err)})
 
-        await axios.put("http://localhost:8081/lod/admin/closeRequest/"+requestToBeUpdated,{"action":updateStatus},{headers:{
+        await axios.put(closeRequestUrl+requestToBeUpdated,{"action":updateStatus},{headers:{
             "x-auth-token":user.token
             }}).
         then((res)=>{
-            axios.get("http://localhost:8081/lod/admin/fetchRequests", {headers:{
+            axios.get(getShopRequestsUrl, {headers:{
             "x-auth-token":user.token
             }}).
             then((res)=>{result = res.data.map((req)=>{return{...req, viewShop:false}}); return result}).

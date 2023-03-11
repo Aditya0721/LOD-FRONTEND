@@ -15,6 +15,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.2.5",
     "bootstrap": "^5.2.3",
+    "ec2-publicip": "^1.0.4",
     "firebase": "^9.16.0",
     "jwt-decode": "^3.1.2",
     "material-ui-phone-number": "^3.0.0",

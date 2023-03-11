@@ -57,7 +57,7 @@ const NavBar = ()=>{
                                     </Typography>
                                 </Button>
                             </Link>
-                                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' } }}>
                                     {(isLoggedIn && user.role=="ADMIN") &&<>
                                         <Link to='/users'><Button
                                             sx={{ my: 2, color: 'white', display: 'block' }}

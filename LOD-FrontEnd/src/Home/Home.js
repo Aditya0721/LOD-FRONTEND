@@ -2,6 +2,7 @@ import { Typography } from "@mui/material"
 import axios from "axios"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { allShopUrl } from "../constants/url"
 import ShowShops from "../shops/ShowShops"
 import { shopActions } from "../store/shop"
 
@@ -11,7 +12,7 @@ const Home = () => {
     const dispatch = useDispatch()
 
     useEffect(()=>{
-        axios.get("http://localhost:8081/lod/shop/shops").
+        axios.get(allShopUrl).
         then((res)=>{console.log(res.data); dispatch(shopActions.setShops(res.data))}).
         catch((err)=>{console.log(err)})  
     },[])

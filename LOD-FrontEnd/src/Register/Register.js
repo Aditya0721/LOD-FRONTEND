@@ -9,7 +9,7 @@ import Input from "../control/input"
 import paperStyle from "../config/style"
 import { useDispatch } from "react-redux"
 import { shopRequestsActions } from "../store/shopRequestSlice"
-import { pinCodeUrl } from "../constants/url"
+import { createShopRequestUrl, getUserByPhoneUrl, pinCodeUrl, registerUrl } from "../constants/url"
 
 
 const Register = () => {
@@ -148,7 +148,7 @@ const Register = () => {
 
     const checkUserExists = async()=>{
         let flag = false
-        await axios.get("http://localhost:8081/lod/user/"+user.phoneNumber).
+        await axios.get(getUserByPhoneUrl+user.phoneNumber).
                     then((res)=>{flag = true}).
                     catch((err)=>{flag = false})
         return flag
@@ -178,12 +178,12 @@ const Register = () => {
 
         if(otpVerified){
             if(user.role==="CUSTOMER"){
-                await axios.post("http://localhost:8081/lod/user/signup", user)
+                await axios.post(registerUrl, user)
                 .then((res)=>{console.log(res.data);setSuccessMessage(res.data.status);setErrorMessage("")})
                 .catch((err)=>{console.log(err); setErrorMessage(err.request.response); setSuccessMessage("")})
             }
             else{
-                await axios.post("http://localhost:8081/lod/user/signup", {user, shop})
+                await axios.post(registerUrl, {user, shop})
                 .then((res)=>{
                     console.log(res.data.data);
                     setSuccessMessage(`we have created your seller account, We will notify once your shop is verified`);
@@ -193,7 +193,7 @@ const Register = () => {
                     console.log(res);
                     setShop({...shop, ["userId"]:res.userId});
                     return res}).
-                then((res)=>{axios.post("http://localhost:8081/lod/admin/shopRequest/A89431",{"shopId":res.shopId}).
+                then((res)=>{axios.post(createShopRequestUrl,{"shopId":res.shopId}).
                 then((res)=>{
                         console.log(res.data)
                     }).

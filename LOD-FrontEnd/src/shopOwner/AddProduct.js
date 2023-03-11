@@ -3,6 +3,7 @@ import { Button, Dialog, DialogContent, Input, InputLabel, MenuItem, Select, Sta
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { addProductToMenuUrl, fetchProductByBrandAndTypeUrl, updateProductInMenuUrl } from "../constants/url"
 import { shopActions } from "../store/shop"
 
 const AddProduct = (props)=>{
@@ -49,7 +50,7 @@ const AddProduct = (props)=>{
     useEffect(()=>{
         console.log(user)
         if(brand!=="" && type!==""){
-            axios.get("http://localhost:8081/lod/product/products"+`?brand=${brand}&type=${type}`,{headers:{
+            axios.get(fetchProductByBrandAndTypeUrl+`?brand=${brand}&type=${type}`,{headers:{
                 "x-auth-token":user.token
             }}).
             then((res)=>{console.log(res); setProductList(res.data); setProduct({...product,["brand"]:brand,["type"]:type})}).
@@ -60,7 +61,8 @@ const AddProduct = (props)=>{
     const handleSubmit = (e)=>{
         e.preventDefault()   
         console.log(product)
-        axios.put("http://localhost:8081/lod/shop/menu/add/"+shop.shopId, {"products":[
+        // adding menu to product
+        axios.put(addProductToMenuUrl+shop.shopId, {"products":[
             product
         ]},{headers:{
             "x-auth-token":user.token
@@ -78,7 +80,8 @@ const AddProduct = (props)=>{
             }
         })
         console.log(updatedMenu, user)
-        axios.put("http://localhost:8081/lod/shop/menu/update/"+shop.shopId, {"menu":
+        //update product in menu
+        axios.put(updateProductInMenuUrl+shop.shopId, {"menu":
             updatedMenu
         },{headers:{
             "x-auth-token":user.token
