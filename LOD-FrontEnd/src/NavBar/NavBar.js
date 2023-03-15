@@ -1,4 +1,4 @@
-import {Dialog, Box, Button, AppBar, Grid, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, IconButton, Stack } from "@mui/material"
+import {Dialog, Box, Button, AppBar, Grid, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, IconButton, Stack, Menu, MenuItem } from "@mui/material"
 import { Container } from "@mui/system"
 import { Link, Outlet, Routes, Route} from "react-router-dom"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -25,6 +25,8 @@ const NavBar = ()=>{
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const user = useSelector(state=>state.auth.user)
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [openMenu, setOpenMenu] = useState(Boolean(anchorEl));
 
     const logOut = ()=>{
         dispatch(dialogActions.close())
@@ -34,13 +36,22 @@ const NavBar = ()=>{
         navigate("/layout/home")
     }
 
+    const handleOpenMenu = (event)=>{
+        setAnchorEl(event.currentTarget)
+        setOpenMenu(true)
+    }
+    const handleCloseMenu = ()=>{
+        setAnchorEl(null)
+        setOpenMenu(false)
+    }
+
     return(
         <>
             <AppBar position="static">
                         <Container maxWidth="xl">
                             <Toolbar>
                             <Link to="/layout/home">
-                                <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+                                <Button id="basic-button" sx={{ my: 2, color: 'white', display: { xs: 'none', md: 'flex' } }}>
                                     <Typography
                                             variant="h6"
                                             href="/home"
@@ -57,7 +68,33 @@ const NavBar = ()=>{
                                     </Typography>
                                 </Button>
                             </Link>
-                                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' } }}>
+                             {/* for small screens */}
+                             <Box sx={{display: { xs: 'flex', md: 'none' }}}>
+                             <Button sx={{ my: 2, color: 'white'}} onClick={handleOpenMenu} >
+                                    <Typography
+                                            variant="h6"
+                                            href="/home"
+                                            sx={{
+                                                mr:2,
+                                                display:{md:'none', xl:'none'},
+                                                fontFamily: 'monospace',
+                                                fontWeight: 700,
+                                                letterSpacing: '.3rem',
+                                                color: 'inherit',
+                                            }}
+                                    >
+                                        LOD
+                                    </Typography>
+                                </Button>
+                                <Menu id="basic-menu" anchorEl={anchorEl} open={openMenu} onClose={handleCloseMenu}>
+                                        <MenuItem onClick={handleCloseMenu}>Shops</MenuItem>
+                                        <MenuItem onClick={handleCloseMenu}>Register</MenuItem>
+                                        <MenuItem onClick={handleCloseMenu}>Login</MenuItem>
+                                </Menu>    
+                             </Box>
+                                {/* for small screens */}
+                                
+                                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                                     {(isLoggedIn && user.role=="ADMIN") &&<>
                                         <Link to='/users'><Button
                                             sx={{ my: 2, color: 'white', display: 'block' }}

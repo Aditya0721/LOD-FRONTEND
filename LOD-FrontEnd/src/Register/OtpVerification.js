@@ -21,7 +21,7 @@ const OtpVerificatoin = (props)=>{
     const onCaptchaVerify = ()=>{
         console.log("inside onCaptchaVErify")
         window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-            'size': 'invisible',
+            'size': 'big',
             'callback': (response) => {
               // reCAPTCHA solved, allow signInWithPhoneNumber.
               // ...

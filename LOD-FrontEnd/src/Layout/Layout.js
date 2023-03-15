@@ -10,10 +10,10 @@ const Layout = () => {
     const navigate = useNavigate()
     const pages = [["Home","/layout/home"], ["Users","/users"], ["SignUp","/layout/register"], ["LogIn", "/layout/login"]]
     return(<>
-            <Grid item xs={12} container border={0} sx={{height: "50%", backgroundImage:`url(${image})`, justifyContent:'center', alignItems:'center'}}>
+            <Grid item xs={12} container border={0} sx={{height: {xl: "50%", xs:"100%", sm:"100%"}, backgroundImage:`url(${image})`, justifyContent:'center', alignItems:'center'}}>
                 <Typography  variant="h1" color='Background'>LOD</Typography> 
             </Grid>
-            <Grid item xs={12} border={2} container sx={{ height: "50%", display:"flex", justifyContent:"center", alignContent:"baseLine"}}>
+            <Grid item xs={12} border={2} container sx={{ height: {xl: "50%", xs:"0%", sm:"0%"}, display:{xs:'none', xl:'flex'}, justifyContent:"center", alignContent:"baseLine"}}>
                 <Routes>
                     <Route index element={<Home></Home>}></Route>
                     <Route path='/home' element={<Home></Home>}></Route>

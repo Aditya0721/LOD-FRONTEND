@@ -23,7 +23,7 @@ const ShopRequests = ()=>{
     let result = []
 
     useEffect(()=>{
-        axios.get("http://localhost:8081/lod/admin/fetchRequests", {headers:{
+        axios.get(getShopRequestsUrl, {headers:{
             "x-auth-token":user.token
         }}).
         then((res)=>{result = res.data.map((req)=>{return{...req, viewShop:false}}); return result}).
