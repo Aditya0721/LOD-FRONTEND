@@ -93,7 +93,7 @@ const NavBar = ()=>{
                                 </Menu>    
                              </Box>
                                 {/* for small screens */}
-                                
+
                                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                                     {(isLoggedIn && user.role=="ADMIN") &&<>
                                         <Link to='/users'><Button
@@ -149,6 +149,9 @@ const NavBar = ()=>{
                                         LogOut
                                     </Button>
                          </Box></>}
+                                <Box sx={{alignContent:'end'}}>
+                                    <Link to={`/cart/${user?0:user.userId}`}><Button sx={{ my: 2, color: 'white', display: 'block' }}>Cart</Button></Link>
+                                </Box>
                             </Toolbar>
                         </Container>    
                     </AppBar>

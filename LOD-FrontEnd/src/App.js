@@ -24,6 +24,8 @@ import jwtDecode from 'jwt-decode';
 import { authActions } from './store/authSlice';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import Cart from './Menu/Cart';
+import Order from './Menu/Order';
 
 function App() {
 
@@ -59,6 +61,8 @@ function App() {
               <Route path='/profile' element={<ProtectedComponent><Profile></Profile></ProtectedComponent>}></Route>
               <Route path='/shopRequests' element={<OnlyAdmin><ShopRequests></ShopRequests></OnlyAdmin>}></Route>
               <Route path='/menu/:shopId' element={<Menu></Menu>}></Route>
+              <Route path='/cart/:userId' element={<Cart></Cart>}></Route>
+              <Route path='/order' element={<ProtectedComponent><Order></Order></ProtectedComponent>}></Route>
             </Routes>
           </Grid>
         </Grid>

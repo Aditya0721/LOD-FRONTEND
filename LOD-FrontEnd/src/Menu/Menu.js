@@ -1,18 +1,23 @@
-import { Button, Card, CardContent, CardHeader, CardMedia, Divider, Grid, Paper, Typography } from "@mui/material"
+import { Backdrop, Button, Card, CardContent, CardHeader, CardMedia, Divider, Grid, Paper, Typography } from "@mui/material"
 import { Box, Stack } from "@mui/system"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router"
 import AddProduct from "../shopOwner/AddProduct"
 import img from "../static/bottle-1.jpg"
+import { cartActions } from "../store/cartSlice"
 import { shopActions } from "../store/shop"
+import Cart from "./Cart"
 
 const Menu = ()=>{
     const params = useParams()
+    const dispatch = useDispatch()
+
     const shopId = params.shopId
+
     const user = useSelector(state=>state.auth.user)
 
-    const [cart, setCart] = useState([])
+    const cart = useSelector(state=> state.cart.cart)
 
     const [totalPrice, setTotalPrice] = useState([])
 
@@ -20,29 +25,55 @@ const Menu = ()=>{
 
     const shop = useSelector(state=>state.shops.currentShop)
 
-    useEffect(()=>{
-        console.log(shop)
-    },[])
-    
-    const addToCart = (product)=>{
-        console.log(cart)
-        const pId = product.productId
+    const [showCart, setShowCart] = useState(false)
 
-        if(!cart.map((ele)=>{return ele.product.productId}).includes(pId)){
-            setCart([...cart,{product:product, quantity:1}])
-            console.log(cart)
+    const [open, setOpen] = useState(false);
+
+    useEffect(()=>{
+        console.log()
+        if(cart.length!==0){
+            console.log(cart[0])
+            if(cart[0].shopId===shopId){
+                setShowCart(true)
+            }
         }
         else{
-            const updatedCart = cart.map((ele)=>{
-                if(ele.product.productId===pId){
-                    return {product:ele.product, quantity:ele.quantity+1}
-                }
-                else{
-                    return ele
-                }
-            })
-            setCart(updatedCart)
+            setShowCart(true)
         }
+    },[cart])
+    
+    const handleClose = ()=>{
+        setOpen(false)
+    }
+    const checkShop = ()=>{
+        if(cart.length!==0 && cart[0].shopId!==shopId){
+            setOpen(true)
+            return false
+        }
+        return true
+    }
+    const addToCart = (product)=>{
+        if(checkShop(product)){
+            console.log(cart)
+            const pId = product.productId
+
+            if(!cart.map((ele)=>{return ele.product.productId}).includes(pId)){
+                dispatch(cartActions.modifyCart([...cart,{product:product, quantity:1, shopId:shopId}]))
+                console.log(cart)
+            }
+            else{
+                const updatedCart = cart.map((ele)=>{
+                    if(ele.product.productId===pId){
+                        return {product:ele.product, quantity:ele.quantity+1, shopId:shopId}
+                    }
+                    else{
+                        return ele
+                    }
+                })
+                dispatch(cartActions.modifyCart(updatedCart))
+            }
+        }
+        
     }
     return(
         <>
@@ -106,30 +137,24 @@ const Menu = ()=>{
                         </Box>
                     </Stack>
                 </Grid>
+                {/* Basket */}
                 <Grid item xl={2} sx={{height:'50vh',overflow:'auto'}}>
-                    <Paper elevation={4}>
-                        BASKET
-                        {cart.map((ele, index)=>{
-                            return(<Card key={index} sx={{height:'150px'}}>
-                            <CardHeader
-                                title={ele.product.productId}
-                                draggable
-                                sx={{height:'5px'}}
-                            />
-                            <CardContent border={1} sx={{width:'100%'}}>
-                                <Typography>Price:</Typography>
-                                <Typography>brand:</Typography>
-                                <Typography>type:</Typography>
-                                <Typography>Quantiy:{ele.quantity}</Typography>
-                            </CardContent>
-                            </Card>
-                                )
-                        })}
-                    </Paper>
-                    
+                    {showCart && <Cart></Cart>}
                 </Grid>
             </Grid>
+            <Backdrop open={open} onClick={handleClose} sx={{color: 'white',  zIndex: (theme) => theme.zIndex.drawer + 1}}>
+                    <Stack direction='column' spacing={1}>
+                        <Typography variant='h3'>
+                            Previous Cart Will Be Discarded !!!!
+                        </Typography>
+                        <Button onClick={handleClose} color="success" variant="contained">Go Back</Button>
+                        <Button onClick={()=>{dispatch(cartActions.modifyCart([]))}} autoFocus variant="contained" color="error">
+                            Discard
+                        </Button>
+                    </Stack>   
+            </Backdrop>
         </Grid>
+
         {showAddProduct && <AddProduct showAddProduct={showAddProduct} setShowAddProduct={setShowAddProduct}></AddProduct>}
         </>
     )

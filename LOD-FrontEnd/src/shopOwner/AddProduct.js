@@ -10,6 +10,10 @@ const AddProduct = (props)=>{
     
     const user = useSelector(state=>state.auth.user)
 
+    const shop = useSelector(state=>state.shops.currentShop)
+    const shops = useSelector(state=>state.shops.shops)
+    const dispatch = useDispatch()
+
     const liquorTypes = [{'type':"VODKA",'brands':[`Tito's Vodka`, `Skyy Vodka`, `Absolut Vodka`]}, {'type':'TEQUILA','brands':[`Patrón Silver Tequila`, `Jose Cuervo Tequila`]}, {'type':'RUM', 'brands':[`Bacardi Rum`, `Capitan Morgan Rum`, `Goslings Black Seal Rum`, `Malibu Coconut Rum`]}, {'type':'WHISKEY', 'brands':[`SEAGRAMS`]}]
 
     const [brands, setBrands] = useState([])
@@ -29,12 +33,10 @@ const AddProduct = (props)=>{
         quantity:'',
         price:'',
         brand:'',
-        type:''
+        type:'',
     })
 
-    const shop = useSelector(state=>state.shops.currentShop)
-    const shops = useSelector(state=>state.shops.shops)
-    const dispatch = useDispatch()
+   
 
     useEffect(()=>{
         console.log(shop.menu.map(ele=>ele.productId).includes(itemId), itemId)
