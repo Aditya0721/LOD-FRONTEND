@@ -15,3 +15,4 @@ exports.createShopRequestUrl = `http://${localhost}:8081/lod/admin/shopRequest/A
 exports.getShopRequestsUrl = `http://${localhost}:8081/lod/admin/fetchRequests`
 exports.closeRequestUrl = `http://${localhost}:8081/lod/admin/closeRequest/`
 exports.updateShopStatusUrl = `http://${localhost}:8081/lod/shop/updateStatus/`
+exports.updateCartUrl = `http://${localhost}:8081/lod/user/updateCart/`

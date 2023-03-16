@@ -16,6 +16,7 @@ import { dialogActions } from "../store/logInRegisterDialogSlice";
 import LiquorStoreIcon from "../Icon/LiquorStoreIcon";
 import CheckLogIn from "../control/CheckLogIn";
 import jwtDecode from "jwt-decode";
+import { cartActions } from "../store/cartSlice";
 
 const NavBar = ()=>{
     
@@ -32,6 +33,7 @@ const NavBar = ()=>{
         dispatch(dialogActions.close())
         dispatch(authActions.logOut())
         dispatch(authActions.setUser({}))
+        dispatch(cartActions.modifyCart([]))
         localStorage.removeItem("token")
         navigate("/layout/home")
     }

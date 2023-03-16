@@ -1,8 +1,10 @@
 import { Backdrop, Button, Card, CardContent, CardHeader, CardMedia, Divider, Grid, Paper, Typography } from "@mui/material"
 import { Box, Stack } from "@mui/system"
+import axios from "axios"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router"
+import { updateCartUrl } from "../constants/url"
 import AddProduct from "../shopOwner/AddProduct"
 import img from "../static/bottle-1.jpg"
 import { cartActions } from "../store/cartSlice"
@@ -31,15 +33,20 @@ const Menu = ()=>{
 
     useEffect(()=>{
         console.log()
-        if(cart.length!==0){
-            console.log(cart[0])
-            if(cart[0].shopId===shopId){
+        axios.post(updateCartUrl,{cart},{headers:{
+            "x-auth-token": user.token
+        }}).then((res)=>{
+            if(cart.length!==0){
+                console.log(cart[0])
+                if(cart[0].shopId===shopId){
+                    setShowCart(true)
+                }
+            }
+            else{
                 setShowCart(true)
             }
-        }
-        else{
-            setShowCart(true)
-        }
+        }).catch((err)=>{console.log(err)})
+        
     },[cart])
     
     const handleClose = ()=>{
@@ -73,7 +80,6 @@ const Menu = ()=>{
                 dispatch(cartActions.modifyCart(updatedCart))
             }
         }
-        
     }
     return(
         <>

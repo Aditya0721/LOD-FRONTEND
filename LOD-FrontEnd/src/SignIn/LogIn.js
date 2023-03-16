@@ -10,6 +10,7 @@ import { authActions } from '../store/authSlice';
 import { dialogActions } from "../store/logInRegisterDialogSlice"
 import jwtDecode from "jwt-decode"
 import { logInByEmailUrl, logInByPhoneUrl } from "../constants/url"
+import { cartActions } from "../store/cartSlice"
 
 const LogIn = (props)=>{
 
@@ -96,11 +97,13 @@ const LogIn = (props)=>{
         await axios.post(logInByEmailUrl+emailId,{
             email:emailId,
             password:password
-        }).then((res)=>{setEmailVerificationMsg("");
+        }).then((res)=>{
+                        setEmailVerificationMsg("");
                         const decoded = jwtDecode(res.data.token, 'SECRET SALT')
                         const user = decoded._doc
                         user.token = res.data.token
                         console.log(user)
+                        dispatch(cartActions.modifyCart(user.cart))
                         dispatch(authActions.setUser(user));
                         dispatch(authActions.logIn()); 
                         dispatch(dialogActions.close());
