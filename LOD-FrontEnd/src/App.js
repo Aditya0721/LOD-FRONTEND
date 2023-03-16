@@ -61,7 +61,7 @@ function App() {
               <Route path='/profile' element={<ProtectedComponent><Profile></Profile></ProtectedComponent>}></Route>
               <Route path='/shopRequests' element={<OnlyAdmin><ShopRequests></ShopRequests></OnlyAdmin>}></Route>
               <Route path='/menu/:shopId' element={<Menu></Menu>}></Route>
-              <Route path='/cart/:userId' element={<Cart></Cart>}></Route>
+              <Route path='/cart' element={<Cart></Cart>}></Route>
               <Route path='/order' element={<ProtectedComponent><Order></Order></ProtectedComponent>}></Route>
             </Routes>
           </Grid>

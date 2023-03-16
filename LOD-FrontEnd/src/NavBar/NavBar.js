@@ -50,8 +50,7 @@ const NavBar = ()=>{
             <AppBar position="static">
                         <Container maxWidth="xl">
                             <Toolbar>
-                            <Link to="/layout/home">
-                                <Button id="basic-button" sx={{ my: 2, color: 'white', display: { xs: 'none', md: 'flex' } }}>
+                                <Button id="basic-button" sx={{ my: 2, color: 'white', display: { xs: 'none', md: 'flex' } }} onClick={()=>{navigate("/layout/home")}}>
                                     <Typography
                                             variant="h6"
                                             href="/home"
@@ -67,32 +66,81 @@ const NavBar = ()=>{
                                         LOD
                                     </Typography>
                                 </Button>
-                            </Link>
                              {/* for small screens */}
                              <Box sx={{display: { xs: 'flex', md: 'none' }}}>
-                             <Button sx={{ my: 2, color: 'white'}} onClick={handleOpenMenu} >
-                                    <Typography
-                                            variant="h6"
-                                            href="/home"
-                                            sx={{
-                                                mr:2,
-                                                display:{md:'none', xl:'none'},
-                                                fontFamily: 'monospace',
-                                                fontWeight: 700,
-                                                letterSpacing: '.3rem',
-                                                color: 'inherit',
-                                            }}
-                                    >
-                                        LOD
-                                    </Typography>
-                                </Button>
+                                <Button sx={{ m: 2, color: 'white'}} onClick={handleOpenMenu} >
+                                        <Typography
+                                                variant="h6"
+                                                href="/home"
+                                                sx={{
+                                                    mr:2,
+                                                    display:{md:'none', xl:'none'},
+                                                    fontFamily: 'monospace',
+                                                    fontWeight: 700,
+                                                    letterSpacing: '.3rem',
+                                                    color: 'inherit',
+                                                }}
+                                        >
+                                            LOD
+                                        </Typography>
+                                    </Button>
                                 <Menu id="basic-menu" anchorEl={anchorEl} open={openMenu} onClose={handleCloseMenu}>
-                                        <MenuItem onClick={handleCloseMenu}>Shops</MenuItem>
-                                        <MenuItem onClick={handleCloseMenu}>Register</MenuItem>
-                                        <MenuItem onClick={handleCloseMenu}>Login</MenuItem>
+                                        <MenuItem onClick={handleCloseMenu}>
+                                            <Button onClick={()=>{navigate("/home")}} sx={{color: 'black', display: 'block' }}>
+                                                    Home
+                                            </Button>
+                                        </MenuItem>
+                                        <MenuItem onClick={handleCloseMenu}>
+                                            <Button onClick={()=>{navigate("/shops")}} sx={{color: 'black', display: 'block' }}>
+                                                    SHOPS
+                                            </Button>
+                                        </MenuItem>
+                                        {!isLoggedIn &&<MenuItem onClick={handleCloseMenu}>
+                                            <Button
+                                                sx={{color: 'black', display: 'block' }} onClick={()=>{dispatch(dialogActions.registerView()); dispatch(dialogActions.open())}}
+                                                >
+                                                Register
+                                            </Button>
+                                        </MenuItem> }
+                                    {!isLoggedIn &&
+                                    <MenuItem onClick={handleCloseMenu}>
+                                         <Button
+                                        sx={{color: 'black', display: 'block' }} onClick={()=>{dispatch(dialogActions.logInView()); dispatch(dialogActions.open())}}
+                                    >
+                                        LogIn
+                                    </Button>
+                                    </MenuItem>
+                                   }
+                                    {(isLoggedIn && user.role=="ADMIN") &&<><MenuItem onClick={handleCloseMenu} >
+                                        <Button sx={{color: 'black', display: 'block' }} onClick={()=>{navigate("/users")}}>
+                                            Users
+                                        </Button>
+                                    </MenuItem>
+                                    <MenuItem onClick={handleCloseMenu} >
+                                    <Button sx={{color: 'black', display: 'block' }} onClick={()=>{navigate('/shopRequests')}}>
+                                                    Shop Requests
+                                            </Button>
+                                    </MenuItem>
+                                    </> }
+                                    {(isLoggedIn && user.role==="SHOP KEEPER") &&<MenuItem onClick={handleCloseMenu}>
+                                        <Button
+                                            sx={{color: 'black', display: 'block' }}
+                                         onClick={()=>{navigate(`/shops/${user.userId}`)}}>
+                                            MY SHOPS
+                                        </Button>
+                                    </MenuItem> }
+
+                                    {isLoggedIn &&
+                                    <MenuItem onClick={handleCloseMenu}>
+                                        <Button
+                                                sx={{color: 'black', display: 'block' }} onClick={logOut}
+                                            >
+                                                LogOut
+                                        </Button>
+                                    </MenuItem>}
                                 </Menu>    
                              </Box>
-                                {/* for small screens */}
+                            {/* for small screens */}
 
                                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                                     {(isLoggedIn && user.role=="ADMIN") &&<>
@@ -130,28 +178,37 @@ const NavBar = ()=>{
                                         LogIn
                                     </Button>}
                                 </Box>
-                                {isLoggedIn && 
-                                <>
-                                <Box sx={{alignContent:'end'}}>
-                                        <Link to="/profile">
-                                        <Stack direction='column'>
-                                            <IconButton>
-                                                <AccountCircleIcon fontSize="large"></AccountCircleIcon>
-                                            </IconButton>
-                                            <Typography color='white'>{user.firstName} {user.lastName}</Typography>
-                                        </Stack>
-                                        </Link>
+
+                                <Box sx={{ flexGrow: 1 }} />
+                                
+                                <Box sx={{ display:'flex'}}>
+                                    <Box sx={{alignContent:'end'}}>
+                                        <Link to='/cart'><Button sx={{ my: 2, color: 'white', display: 'block' }}>Cart</Button></Link>
+                                    </Box>
+                                    
+                                    {isLoggedIn &&
+                                    <Box sx={{display:{xs:'none', md:'block'}, alignContent:'end'}}>
+                                        <Button
+                                                sx={{ my: 2, color: 'white', display: 'block' }} onClick={logOut}
+                                            >
+                                                LogOut
+                                        </Button>
+                                    </Box>}
+
+                                    {isLoggedIn && 
+                                    <Box sx={{alignContent:'end'}}>
+                                            <Link to="/profile">
+                                            <Stack direction='column'>
+                                                <IconButton>
+                                                    <AccountCircleIcon fontSize="large"></AccountCircleIcon>
+                                                </IconButton>
+                                                <Typography color='white'>{user.firstName} {user.lastName}</Typography>
+                                            </Stack>
+                                            </Link>
+                                    </Box>}
+                                                        
                                 </Box>
-                                 <Box sx={{alignContent:'end'}}>
-                                 <Button
-                                        sx={{ my: 2, color: 'white', display: 'block' }} onClick={logOut}
-                                    >
-                                        LogOut
-                                    </Button>
-                         </Box></>}
-                                <Box sx={{alignContent:'end'}}>
-                                    <Link to={`/cart/${user?0:user.userId}`}><Button sx={{ my: 2, color: 'white', display: 'block' }}>Cart</Button></Link>
-                                </Box>
+                                           
                             </Toolbar>
                         </Container>    
                     </AppBar>
