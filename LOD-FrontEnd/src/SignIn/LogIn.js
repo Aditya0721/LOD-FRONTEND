@@ -5,7 +5,7 @@ import OtpVerificationComponent from "../Register/OtpVerification"
 import Input from "../control/input"
 import { useNavigate } from "react-router"
 import axios from "axios"
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from '../store/authSlice';
 import { dialogActions } from "../store/logInRegisterDialogSlice"
 import jwtDecode from "jwt-decode"
@@ -15,6 +15,8 @@ import { cartActions } from "../store/cartSlice"
 const LogIn = (props)=>{
 
     const dispatch = useDispatch()
+
+    const cart = useSelector(state=>state.cart.cart)
 
     const [phoneNumberVerification, setPhoneNumberVerification] = useState(false)
     const [emailVerification, setEmailVerification] = useState(false)
@@ -93,6 +95,39 @@ const LogIn = (props)=>{
         }
     }
 
+    const handleCarts = (userCart, currentCart)=>{
+        if(userCart.length===0){
+            return currentCart
+        }
+        if(currentCart.length===0){
+            return userCart
+        }
+        if(userCart[0].shopId!==currentCart[0].shopId){
+            return userCart
+        }
+        
+        let updatedCart = [...currentCart]
+
+        updatedCart = userCart.map((ele)=>{
+            if(updatedCart.map(ele=>ele.product.productId).includes(ele.product.productId)){
+                const pId = ele.product.productId
+                const shopId = ele.shopid
+                const quantity = ele.quantity
+                const element =  updatedCart.find((element)=>{
+                                if(element.product.productId===pId){
+                                    return element
+                                }
+                            })
+                return {product:element.product, quantity:quantity+element.quantity, shopId:shopId}
+            }
+            return ele
+        })
+
+        console.log(updatedCart)
+
+        return updatedCart
+    }
+
     const handleLogIn = async()=>{
         await axios.post(logInByEmailUrl+emailId,{
             email:emailId,
@@ -103,10 +138,11 @@ const LogIn = (props)=>{
                         const user = decoded._doc
                         user.token = res.data.token
                         console.log(user)
-                        dispatch(cartActions.modifyCart(user.cart))
+                        const updatedCart = handleCarts(user.cart, cart)
+                        dispatch(cartActions.modifyCart(updatedCart))
                         dispatch(authActions.setUser(user));
                         dispatch(authActions.logIn()); 
-                        dispatch(dialogActions.close());
+                        dispatch(dialogActions.close());    
                         localStorage.setItem("token", res.data.token);
                     }).
         catch((err)=>{console.log(err.response.data); setEmailVerificationMsg(err.response.data)})

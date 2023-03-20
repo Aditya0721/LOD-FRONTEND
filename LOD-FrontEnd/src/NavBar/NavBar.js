@@ -32,7 +32,7 @@ const NavBar = ()=>{
     const logOut = ()=>{
         dispatch(dialogActions.close())
         dispatch(authActions.logOut())
-        dispatch(authActions.setUser({}))
+        dispatch(authActions.setUser(null))
         dispatch(cartActions.modifyCart([]))
         localStorage.removeItem("token")
         navigate("/layout/home")

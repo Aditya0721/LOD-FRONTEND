@@ -26,6 +26,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Cart from './Menu/Cart';
 import Order from './Menu/Order';
+import { cartActions } from './store/cartSlice';
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
         user.token = localStorage.getItem("token")
         console.log(user)
         dispatch(authActions.setUser(user))
+        dispatch(cartActions.modifyCart(user.cart))
         dispatch(authActions.logIn())
     }},[])
 
