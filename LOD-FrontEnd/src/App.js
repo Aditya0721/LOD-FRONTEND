@@ -27,6 +27,7 @@ import { useDispatch } from 'react-redux';
 import Cart from './Menu/Cart';
 import Order from './Menu/Order';
 import { cartActions } from './store/cartSlice';
+import Footer from './footer/footer';
 
 function App() {
 
@@ -67,6 +68,7 @@ function App() {
               <Route path='/order' element={<ProtectedComponent><Order></Order></ProtectedComponent>}></Route>
             </Routes>
           </Grid>
+          <Footer></Footer>
         </Grid>
     </BrowserRouter>
   </>

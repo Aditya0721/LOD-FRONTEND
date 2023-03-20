@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { allShopUrl } from "../constants/url"
 import ShowShops from "../shops/ShowShops"
 import { shopActions } from "../store/shop"
+import Footer from "../footer/footer"
 
 const Home = () => {
     const shopRequests = useSelector(state=>state.shopRequests.requests)
@@ -23,6 +24,7 @@ const Home = () => {
     return(
         <>
             LOD
+            {/* <Footer></Footer> */}
         </>
     )
 }
