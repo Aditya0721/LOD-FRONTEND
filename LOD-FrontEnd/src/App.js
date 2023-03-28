@@ -50,10 +50,10 @@ function App() {
       <Grid container
           direction="row"
           justify="center" height="100vh" alignItems="stretch">
-          <Grid item xs={12}>
+          <Grid item xs={12} md={12} xl={12}>
               <NavBar></NavBar>
           </Grid>
-          <Grid item container xs={12} height='100%' display='flex' justifyContent="center">
+          <Grid item container xs={12} md={12} xl={12} height='100%' display='flex' justifyContent="center">
             <Routes>
               <Route path="/*" element={<Layout></Layout>}></Route>
               <Route path="/layout/*" element={<Layout />} />

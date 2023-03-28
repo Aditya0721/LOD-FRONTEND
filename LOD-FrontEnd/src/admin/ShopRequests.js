@@ -79,7 +79,7 @@ const ShopRequests = ()=>{
 
     return(<>
         <Grid container>
-            <Grid item xl={2} sx={{display:'flex', justifyContent:'center', alignItems:'baseLine'}}>
+            <Grid item xl={2} md={2} xs={2} sx={{display:'flex', justifyContent:'center', alignItems:'baseLine'}}>
                 <Stack>
                     <Typography variant="h6" color="primary">Status</Typography>
                     <ToggleButtonGroup color="primary" value={alignment}>
@@ -92,7 +92,7 @@ const ShopRequests = ()=>{
                     </ToggleButtonGroup>
                 </Stack>
             </Grid>
-            <Grid container item xl={10} border={1}>
+            <Grid container item xl={10} md={10} xs={10} border={1}>
                 {toggledData.length!==0?toggledData.map((request, index)=>{
                     return(
                         <Grid container item xl={12} key={index}>

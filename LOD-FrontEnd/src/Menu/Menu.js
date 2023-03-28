@@ -99,8 +99,8 @@ const Menu = ()=>{
     }
     return(
         <>
-        <Grid item container xl={12} sx={{display:'flex', justifyContent:'flex-start'}}>
-            <Grid item xl={12} border={1} sx={{height:'200px', display:'flex', justifyContent:'center', alignItems:'center', backgroundColor:'black'}}>
+        <Grid item container xl={12} md={12} xs={12} sx={{display:'flex', justifyContent:'flex-start'}}>
+            <Grid item xl={12} md={12} xs={12} border={1} sx={{height:'200px', display:'flex', justifyContent:'center', alignItems:'center', backgroundColor:'black'}}>
                 <Card sx={{backgroundColor:'white'}}>
                     <CardHeader
                         title={shop.shopName}
@@ -111,8 +111,8 @@ const Menu = ()=>{
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item container xl={12} border={1} sx={{height:'200vh', overflow:'hidden'}}> 
-                <Grid item border={1} xl={2} sx={{display:'flex', justifyContent:'right', alignItem:'right'}}>
+            <Grid item container xl={12} md={12} xs={12} border={1} sx={{height:'200vh', overflow:'hidden'}}> 
+                <Grid item border={1} xl={2} md={2} xs={2} sx={{display:'flex', justifyContent:'right', alignItem:'right'}}>
                     <Stack sx={{display:'flex', justifyContent:'right', alignContent:'space-around'}}>
                         <Typography>Best Seller</Typography>
                         <Typography>Best Seller</Typography>
@@ -121,7 +121,7 @@ const Menu = ()=>{
                         <Typography>Best Seller</Typography>
                     </Stack>
                 </Grid>
-                <Grid item xl={8} border={1} sx={{maxHeight:'200vh', overflow:'auto', display:'flex', justifyContent:'center', alignItems:'baseLine'}}>
+                <Grid item xl={8} md={8} xs={8} border={1} sx={{maxHeight:'200vh', overflow:'auto', display:'flex', justifyContent:'center', alignItems:'baseLine'}}>
                     <Stack direction='column' sx={{width:'80%', display:'flex', justifyContent:'center', alignItems:'baseLine'}}
                         
                         spacing={2}
@@ -160,7 +160,7 @@ const Menu = ()=>{
                     </Stack>
                 </Grid>
                 {/* Basket */}
-                <Grid item xl={2} sx={{height:'50vh',overflow:'auto'}}>
+                <Grid item xl={2} md={2} xs={2} sx={{height:'50vh',overflow:'auto'}}>
                     {showCart && <Cart></Cart>}
                 </Grid>
             </Grid>

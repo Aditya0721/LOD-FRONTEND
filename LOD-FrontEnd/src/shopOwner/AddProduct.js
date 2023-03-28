@@ -52,6 +52,7 @@ const AddProduct = (props)=>{
     useEffect(()=>{
         console.log(user)
         if(brand!=="" && type!==""){
+            console.log(brand, type)
             axios.get(fetchProductByBrandAndTypeUrl+`?brand=${brand}&type=${type}`,{headers:{
                 "x-auth-token":user.token
             }}).
