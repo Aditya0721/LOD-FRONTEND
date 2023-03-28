@@ -31,7 +31,6 @@ const Menu = ()=>{
 
     const [showCart, setShowCart] = useState(false)
 
-    const [open, setOpen] = useState(false);
 
     useEffect(()=>{
         console.log(user)
@@ -65,14 +64,11 @@ const Menu = ()=>{
         }
         
     },[cart, user])
-    
-    const handleClose = ()=>{
-        setOpen(false)
-    }
+
     const checkShop = ()=>{
         console.log(shopId)
         if(cart.length!==0 && cart[0].shopId!==shopId){
-            setOpen(true)
+            dispatch(cartActions.openCartWarning())
             return false
         }
         return true
@@ -170,7 +166,6 @@ const Menu = ()=>{
             </Grid>
         </Grid>
         {showAddProduct && <AddProduct showAddProduct={showAddProduct} setShowAddProduct={setShowAddProduct}></AddProduct>}
-        {open && <EmptyCartWarning setOpenWarning={setOpen}></EmptyCartWarning>}
         </>
     )
 }

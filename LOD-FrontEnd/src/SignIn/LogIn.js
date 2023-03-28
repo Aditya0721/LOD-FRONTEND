@@ -97,23 +97,27 @@ const LogIn = (props)=>{
 
     const handleCarts = (userCart, currentCart)=>{
         if(userCart.length===0){
+            console.log("currentCart")
             return currentCart
         }
         if(currentCart.length===0){
+            console.log("currentCart")
             return userCart
         }
         if(userCart[0].shopId!==currentCart[0].shopId){
+            dispatch(cartActions.openCartWarning())
             return userCart
         }
         
-        let updatedCart = [...currentCart]
+        let updatedCart = []
 
         updatedCart = userCart.map((ele)=>{
-            if(updatedCart.map(ele=>ele.product.productId).includes(ele.product.productId)){
+            if(currentCart.map(prod=>prod.product.productId).includes(ele.product.productId)){
                 const pId = ele.product.productId
-                const shopId = ele.shopid
+                const shopId = ele.shopId
+                console.log(ele)
                 const quantity = ele.quantity
-                const element =  updatedCart.find((element)=>{
+                const element =  currentCart.find((element)=>{
                                 if(element.product.productId===pId){
                                     return element
                                 }
@@ -123,7 +127,11 @@ const LogIn = (props)=>{
             return ele
         })
 
-        console.log(updatedCart)
+        currentCart.map((ele)=>{
+            if(!updatedCart.map(prod=>prod.product.productId).includes(ele.product.productId)){
+                updatedCart.push(ele)
+            }
+        })
 
         return updatedCart
     }

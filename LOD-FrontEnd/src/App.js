@@ -28,6 +28,7 @@ import Cart from './Menu/Cart';
 import Order from './Menu/Order';
 import { cartActions } from './store/cartSlice';
 import Footer from './footer/footer';
+import EmptyCartWarning from './Menu/EmptyCartWarning';
 
 function App() {
 
@@ -67,8 +68,8 @@ function App() {
               <Route path='/cart' element={<Cart></Cart>}></Route>
               <Route path='/order' element={<ProtectedComponent><Order></Order></ProtectedComponent>}></Route>
             </Routes>
+            <EmptyCartWarning></EmptyCartWarning>
           </Grid>
-          <Footer></Footer>
         </Grid>
     </BrowserRouter>
   </>

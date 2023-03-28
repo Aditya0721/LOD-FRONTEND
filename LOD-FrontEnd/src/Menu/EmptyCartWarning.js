@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../store/cartSlice";
 
 const { Backdrop, Typography, Stack, Button } = require("@mui/material")
@@ -8,14 +8,13 @@ const EmptyCartWarning = (props)=>{
     
     const dispatch = useDispatch()
 
-    const [open, setOpen] = useState(true);
+    const cartWarning = useSelector(state=>state.cart.cartWarning)
 
     const handleClose = ()=>{
-        setOpen(false)
-        props.setOpenWarning(false)
+        dispatch(cartActions.closeCartWarning())
     }
 
-    return(<Backdrop open={open} onClick={handleClose} sx={{color: 'white',  zIndex: (theme) => theme.zIndex.drawer + 1}}>
+    return(<Backdrop open={cartWarning} onClick={handleClose} sx={{color: 'white',  zIndex: (theme) => theme.zIndex.drawer + 1}}>
             <Stack direction='column' spacing={1}>
                 <Typography variant='h3'>
                     Previous Cart Will Be Discarded !!!!

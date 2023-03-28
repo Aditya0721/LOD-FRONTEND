@@ -17,7 +17,6 @@ const Cart = (props)=>{
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const user = useSelector(state=>state.auth.user)
-    const [openWarning, setOpenWarning] = useState(false)
 
     useEffect(()=>{
         if(user){
@@ -57,7 +56,7 @@ const Cart = (props)=>{
     }
 
     const emptyCart = ()=>{
-        setOpenWarning(true)
+        dispatch(cartActions.openCartWarning())
     }
 
     return(
@@ -101,7 +100,6 @@ const Cart = (props)=>{
                         </ButtonGroup>
                     } 
             </Paper>
-            {openWarning && <EmptyCartWarning setOpenWarning={setOpenWarning}></EmptyCartWarning>}
         </>
     )
 }
