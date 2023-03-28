@@ -16,7 +16,7 @@ const Layout = () => {
                 <Typography  variant="h1" color='Background'>LOD</Typography> 
             </Grid>
             <Grid item xs={12} md={12} xl={12} border={2} container sx={{ height: {xl: "50%",
-            l:"50%", md: "50%", xs:"0%", sm:"50%"}, display:{xs:'none', xl:'flex'}, justifyContent:"center", alignContent:"baseLine"}}>
+            l:"50%", md: "50%", xs:"0%", sm:"50%"}, display:{xs:'none', xl:'flex', l:'flex', md:'flex', sm:'flex'}, justifyContent:"center", alignContent:"baseLine"}}>
                 <Routes>
                     <Route index element={<Home></Home>}></Route>
                     <Route path='/home' element={<Home></Home>}></Route>
